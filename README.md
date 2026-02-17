@@ -143,7 +143,7 @@ Upload both files as GitHub Release assets.
 
 ## License
 
-This module is provided as-is for use with Foundry VTT and the Draw Steel system.
+This project is licensed under the [MIT License](LICENSE.md).
 
 ## Acknowledgements
 
