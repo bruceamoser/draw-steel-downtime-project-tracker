@@ -1,0 +1,112 @@
+<section class="project-board-body" data-drop-zone>
+
+  {{!-- Empty state --}}
+  {{#if isEmpty}}
+  <div class="board-empty">
+    <i class="fas fa-users fa-3x"></i>
+    <p>No heroes registered.</p>
+    <p class="hint">Drag a PC actor from the sidebar onto this window to get started.</p>
+  </div>
+  {{else}}
+
+  {{!-- Hero cards --}}
+  {{#each heroes as |hero|}}
+  <div class="hero-card" data-actor-id="{{hero.actorId}}">
+
+    {{!-- Hero header --}}
+    <div class="hero-header">
+      <img class="hero-portrait" src="{{hero.img}}" alt="{{hero.name}}" width="48" height="48" />
+      <div class="hero-info">
+        <h3 class="hero-name">{{hero.name}}</h3>
+        {{#if hero.career}}
+        <div class="career-line">
+          <span class="career-name">{{hero.career.name}}</span>
+          <span class="career-points" title="Career Project Points: {{hero.career.remaining}} remaining of {{hero.career.total}} total ({{hero.career.allocated}} allocated)">
+            <i class="fas fa-coins"></i>
+            <strong>{{hero.career.remaining}}</strong> / {{hero.career.total}} PP
+            {{#if hero.career.allocated}}<span class="allocated">({{hero.career.allocated}} allocated)</span>{{/if}}
+          </span>
+        </div>
+        {{/if}}
+      </div>
+      {{#if @root.isGM}}
+      <button type="button" class="icon-btn remove-hero" data-action="removeHero" data-tooltip="Remove Hero">
+        <i class="fas fa-times"></i>
+      </button>
+      {{/if}}
+    </div>
+
+    {{!-- Projects --}}
+    {{#if hero.projects.length}}
+    <div class="project-list">
+      {{#each hero.projects as |proj|}}
+      <div class="project-card {{#if proj.completed}}completed{{/if}}" data-item-id="{{proj.itemId}}">
+
+        <div class="project-header">
+          <span class="project-name">{{proj.name}}</span>
+          <span class="project-type badge badge-{{proj.type}}">{{proj.typeLabel}}</span>
+          {{#if @root.isGM}}
+          <button type="button" class="icon-btn remove-project" data-action="removeProject" data-tooltip="Remove Project">
+            <i class="fas fa-trash"></i>
+          </button>
+          {{/if}}
+        </div>
+
+        {{!-- Progress bar --}}
+        <div class="progress-row">
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill {{#if proj.completed}}complete{{/if}}" style="width: {{proj.pct}}%;"></div>
+          </div>
+          <span class="progress-label">{{proj.points}} / {{proj.goal}} <small>({{proj.pct}}%)</small></span>
+        </div>
+
+        {{!-- Detail rows --}}
+        {{#if proj.projectSource}}
+        <div class="detail-row">
+          <i class="fas fa-book"></i>
+          <span class="detail-label">Source:</span>
+          <span class="detail-value">{{proj.projectSource}}</span>
+        </div>
+        {{/if}}
+        {{#if proj.prerequisites}}
+        <div class="detail-row">
+          <i class="fas fa-list-check"></i>
+          <span class="detail-label">Prerequisites:</span>
+          <span class="detail-value">{{proj.prerequisites}}</span>
+        </div>
+        {{/if}}
+
+        {{!-- Action buttons --}}
+        <div class="project-actions">
+          {{#unless proj.completed}}
+          <button type="button" class="btn btn-sm" data-action="addPoints" data-tooltip="Add Points">
+            <i class="fas fa-plus"></i> Add Points
+          </button>
+          <button type="button" class="btn btn-sm" data-action="rollProgress" data-tooltip="Roll for Progress">
+            <i class="fas fa-dice-d20"></i> Roll
+          </button>
+          {{#if proj.canComplete}}
+          <button type="button" class="btn btn-sm btn-complete" data-action="completeProject" data-tooltip="Mark Complete">
+            <i class="fas fa-check-circle"></i> Complete
+          </button>
+          {{/if}}
+          {{/unless}}
+          <button type="button" class="btn btn-sm btn-ledger" data-action="viewLedger" data-tooltip="View Point Ledger">
+            <i class="fas fa-scroll"></i> Ledger ({{proj.ledgerCount}})
+          </button>
+        </div>
+
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <div class="no-projects">
+      <p class="hint"><i class="fas fa-inbox"></i> No projects. Drag a project item onto this hero to add one.</p>
+    </div>
+    {{/if}}
+
+  </div>
+  {{/each}}
+
+  {{/if}}
+</section>

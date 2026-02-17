@@ -1,0 +1,78 @@
+{
+  "DS_PROJECT_TRACKER": {
+    "title": "Project Tracker",
+    "toolbar": {
+      "tooltip": "Open Project Tracker"
+    },
+    "board": {
+      "title": "Party Downtime Projects",
+      "dropHero": "Drag a PC actor here to add them to the board",
+      "noHeroes": "No heroes registered. Drag a PC actor onto the board to get started.",
+      "noProjects": "No projects yet. Drag a project item onto this hero, or projects will auto-import from their character sheet.",
+      "removeHero": "Remove Hero",
+      "removeHeroConfirm": "Remove {name} from the board? Ledger history will be preserved.",
+      "removeProject": "Remove Project",
+      "removeProjectConfirm": "Remove this project from the board? Ledger history will be lost.",
+      "addPoints": "Add Points",
+      "rollProgress": "Roll Progress",
+      "complete": "Complete",
+      "completeConfirm": "Mark this project as complete? This cannot be undone.",
+      "viewLedger": "View Ledger"
+    },
+    "career": {
+      "label": "Career",
+      "projectPoints": "Project Points",
+      "remaining": "Remaining",
+      "total": "Total",
+      "allocated": "Allocated"
+    },
+    "project": {
+      "type": "Type",
+      "goal": "Goal",
+      "points": "Points",
+      "progress": "Progress",
+      "crafting": "Crafting",
+      "research": "Research",
+      "other": "Other",
+      "completed": "Completed",
+      "source": "Source",
+      "prerequisites": "Prerequisites",
+      "characteristics": "Characteristics"
+    },
+    "addPoints": {
+      "title": "Add Points",
+      "source": "Source",
+      "points": "Points",
+      "notes": "Notes",
+      "add": "Add to Ledger",
+      "cancel": "Cancel",
+      "sources": {
+        "career": "Career Points",
+        "roll": "Project Roll",
+        "guide": "Guide Studied",
+        "follower": "Follower Work",
+        "perk": "Traveling Artisan/Sage",
+        "collaboration": "Hero Collaboration",
+        "event": "Project Event",
+        "other": "Other / Director Award"
+      }
+    },
+    "ledger": {
+      "title": "Point Ledger",
+      "date": "Date",
+      "source": "Source",
+      "points": "Points",
+      "notes": "Notes",
+      "total": "Total",
+      "empty": "No entries yet.",
+      "deleteSelected": "Delete Selected",
+      "close": "Close"
+    },
+    "settings": {
+      "syncPoints": {
+        "name": "Sync points to project items",
+        "hint": "When enabled, adding points via the tracker will also update the project item's system.points field on the actor."
+      }
+    }
+  }
+}

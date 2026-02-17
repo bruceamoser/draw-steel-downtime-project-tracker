@@ -50,7 +50,7 @@ This module **only** works with the Draw Steel system. It will not initialise in
 
 ### From Source (development)
 
-1. Symlink `foundry-project-point-tracker/module/` into your Foundry VTT `Data/modules/` directory as `ds-project-tracker/`.
+1. Symlink `foundry-project-point-tracker/` into your Foundry VTT `Data/modules/` directory as `ds-project-tracker/`.
 2. Restart Foundry and enable the module.
 
 ## Usage
@@ -106,23 +106,22 @@ Access via **Settings → Module Settings → Draw Steel: Project Point Tracker*
 
 ```
 foundry-project-point-tracker/
-├── module/                           # Foundry module source
-│   ├── module.json                   # Module manifest
-│   ├── lang/
-│   │   └── en.json                   # English localisation
-│   ├── scripts/
-│   │   ├── module.mjs                # Entry point: hooks, settings, toolbar button
-│   │   ├── ProjectBoard.mjs          # Main ApplicationV2 window
-│   │   ├── AddPointsDialog.mjs       # Add Points dialog
-│   │   ├── LedgerDialog.mjs          # Point ledger dialog
-│   │   └── data/
-│   │       └── BoardState.mjs        # Data model, state helpers, actor extraction
-│   ├── styles/
-│   │   └── ds-project-tracker.css    # All styles
-│   └── templates/
-│       ├── project-board.hbs         # Main board template
-│       ├── add-points.hbs            # Add Points form
-│       └── ledger.hbs                # Ledger table
+├── module.json                       # Module manifest
+├── lang/
+│   └── en.json                       # English localisation
+├── scripts/
+│   ├── module.mjs                    # Entry point: hooks, settings, toolbar button
+│   ├── ProjectBoard.mjs              # Main ApplicationV2 window
+│   ├── AddPointsDialog.mjs           # Add Points dialog
+│   ├── LedgerDialog.mjs              # Point ledger dialog
+│   └── data/
+│       └── BoardState.mjs            # Data model, state helpers, actor extraction
+├── styles/
+│   └── ds-project-tracker.css        # All styles
+├── templates/
+│   ├── project-board.hbs             # Main board template
+│   ├── add-points.hbs                # Add Points form
+│   └── ledger.hbs                    # Ledger table
 ├── dist/                             # Build output (git-ignored)
 ├── tools/
 │   └── build_foundry_release.js      # Build & zip script

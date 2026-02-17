@@ -1,0 +1,41 @@
+{
+  "id": "ds-project-tracker",
+  "title": "Draw Steel: Project Point Tracker",
+  "description": "A party-level project board for tracking downtime project progress, career project points, and point sources in the Draw Steel system for Foundry VTT.",
+  "url": "https://github.com/bruceamoser/draw-steel-downtime-project-tracker",
+  "bugs": "https://github.com/bruceamoser/draw-steel-downtime-project-tracker/issues",
+  "version": "0.1.0",
+  "license": "LICENSE.md",
+  "authors": [
+    {
+      "name": "Svellheim",
+      "url": "https://github.com/bruceamoser"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "draw-steel",
+        "type": "system",
+        "compatibility": {}
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/module.mjs"
+  ],
+  "styles": [
+    "styles/ds-project-tracker.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ]
+}

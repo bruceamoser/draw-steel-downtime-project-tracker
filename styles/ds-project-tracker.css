@@ -1,0 +1,358 @@
+/* ═══════════════════════════════════════════════════════════
+   ds-project-tracker — Styles
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Board body ─── */
+.ds-project-tracker.project-board .project-board-body {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100%;
+}
+
+.ds-project-tracker .project-board-body.drag-over {
+  outline: 2px dashed var(--color-border-highlight, #7b68ee);
+  outline-offset: -4px;
+  border-radius: 6px;
+}
+
+/* ─── Empty state ─── */
+.ds-project-tracker .board-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--color-text-dark-secondary, #888);
+}
+.ds-project-tracker .board-empty i {
+  opacity: 0.35;
+}
+.ds-project-tracker .hint {
+  font-size: 0.85em;
+  color: var(--color-text-dark-secondary, #999);
+}
+
+/* ─── Hero card ─── */
+.ds-project-tracker .hero-card {
+  background: var(--color-cool-5, rgba(0,0,0,0.06));
+  border: 1px solid var(--color-border-light-2, #ccc);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.ds-project-tracker .hero-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ds-project-tracker .hero-portrait {
+  border-radius: 4px;
+  border: 1px solid var(--color-border-light-tertiary, #aaa);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ds-project-tracker .hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-project-tracker .hero-name {
+  margin: 0;
+  font-size: 1.05em;
+  line-height: 1.2;
+}
+
+.ds-project-tracker .career-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85em;
+  margin-top: 2px;
+}
+.ds-project-tracker .career-name {
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #666);
+}
+.ds-project-tracker .career-points {
+  white-space: nowrap;
+}
+.ds-project-tracker .career-points .allocated {
+  color: var(--color-text-dark-secondary, #888);
+  font-size: 0.9em;
+}
+
+/* ─── Icon buttons ─── */
+.ds-project-tracker .icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 5px;
+  color: var(--color-text-dark-secondary, #888);
+  font-size: 0.85em;
+  line-height: 1;
+  border-radius: 3px;
+}
+.ds-project-tracker .icon-btn:hover {
+  color: var(--color-text-hyperlink, #ff6400);
+  background: var(--color-cool-5, rgba(0,0,0,0.08));
+}
+
+/* ─── Project list ─── */
+.ds-project-tracker .project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ds-project-tracker .no-projects {
+  padding: 12px 8px;
+  text-align: center;
+}
+
+/* ─── Project card ─── */
+.ds-project-tracker .project-card {
+  background: var(--color-warm-1, rgba(255,255,255,0.6));
+  border: 1px solid var(--color-border-light-2, #ddd);
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+.ds-project-tracker .project-card.completed {
+  opacity: 0.6;
+  border-color: var(--color-level-success, #4caf50);
+}
+
+.ds-project-tracker .project-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.ds-project-tracker .project-name {
+  font-weight: bold;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Badge */
+.ds-project-tracker .badge {
+  font-size: 0.7em;
+  padding: 1px 6px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ds-project-tracker .badge-crafting {
+  background: #e8d4a0;
+  color: #5a4520;
+}
+.ds-project-tracker .badge-research {
+  background: #c4d8f0;
+  color: #2a3f5f;
+}
+.ds-project-tracker .badge-other {
+  background: #d4d4d4;
+  color: #444;
+}
+
+/* ─── Progress bar ─── */
+.ds-project-tracker .progress-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.ds-project-tracker .progress-bar-container {
+  flex: 1;
+  height: 14px;
+  background: var(--color-cool-4, #e0e0e0);
+  border-radius: 7px;
+  overflow: hidden;
+  position: relative;
+}
+.ds-project-tracker .progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5b8dd9, #7baaf7);
+  border-radius: 7px;
+  transition: width 0.3s ease;
+}
+.ds-project-tracker .progress-bar-fill.complete {
+  background: linear-gradient(90deg, #4caf50, #66cc70);
+}
+.ds-project-tracker .progress-label {
+  font-size: 0.8em;
+  white-space: nowrap;
+  min-width: 100px;
+  text-align: right;
+}
+.ds-project-tracker .progress-label small {
+  color: var(--color-text-dark-secondary, #888);
+}
+
+/* ─── Detail rows ─── */
+.ds-project-tracker .detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 0.8em;
+  color: var(--color-text-dark-secondary, #666);
+  padding: 1px 0;
+}
+.ds-project-tracker .detail-row i {
+  margin-top: 2px;
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.ds-project-tracker .detail-label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ds-project-tracker .detail-value {
+  word-break: break-word;
+}
+
+/* ─── Project action buttons ─── */
+.ds-project-tracker .project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+.ds-project-tracker .btn {
+  font-size: 0.78em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border-light-2, #ccc);
+  background: var(--color-cool-5, #f0f0f0);
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ds-project-tracker .btn:hover {
+  background: var(--color-cool-4, #e0e0e0);
+  border-color: var(--color-border-highlight, #7b68ee);
+}
+.ds-project-tracker .btn-complete {
+  background: #4caf50;
+  color: #fff;
+  border-color: #388e3c;
+}
+.ds-project-tracker .btn-complete:hover {
+  background: #388e3c;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Add Points Dialog
+   ═══════════════════════════════════════════════════════════ */
+
+.ds-project-tracker.add-points-dialog .add-points-form {
+  padding: 8px;
+}
+
+.ds-project-tracker.add-points-dialog .dialog-project-name {
+  margin: 0 0 10px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light-2, #ccc);
+}
+
+.ds-project-tracker.add-points-dialog .form-group {
+  margin-bottom: 8px;
+}
+.ds-project-tracker.add-points-dialog .form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85em;
+  margin-bottom: 3px;
+}
+.ds-project-tracker.add-points-dialog select,
+.ds-project-tracker.add-points-dialog input[type="number"],
+.ds-project-tracker.add-points-dialog input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ds-project-tracker.add-points-dialog .form-footer {
+  padding-top: 8px;
+  text-align: right;
+}
+.ds-project-tracker.add-points-dialog .form-footer .btn {
+  font-size: 0.9em;
+  padding: 5px 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Ledger Dialog
+   ═══════════════════════════════════════════════════════════ */
+
+.ds-project-tracker.ledger-dialog .ledger-body {
+  padding: 8px;
+}
+
+.ds-project-tracker.ledger-dialog .ledger-project-name {
+  margin: 0 0 8px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light-2, #ccc);
+}
+
+.ds-project-tracker.ledger-dialog .ledger-empty {
+  text-align: center;
+  color: var(--color-text-dark-secondary, #888);
+  padding: 24px 0;
+}
+
+.ds-project-tracker .ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+}
+.ds-project-tracker .ledger-table th {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 2px solid var(--color-border-light-2, #ccc);
+  font-weight: 600;
+}
+.ds-project-tracker .ledger-table td {
+  padding: 3px 6px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #eee);
+}
+.ds-project-tracker .ledger-table .col-points {
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #4caf50;
+}
+.ds-project-tracker .ledger-table .col-date {
+  white-space: nowrap;
+  color: var(--color-text-dark-secondary, #888);
+  min-width: 70px;
+}
+.ds-project-tracker .ledger-table .col-actions {
+  width: 32px;
+  text-align: center;
+}
+.ds-project-tracker .ledger-table .col-notes {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-project-tracker .ledger-total-row td {
+  border-top: 2px solid var(--color-border-light-2, #ccc);
+  border-bottom: none;
+  padding-top: 6px;
+}
