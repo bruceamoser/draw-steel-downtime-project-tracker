@@ -4,7 +4,7 @@
   "description": "A party-level project board for tracking downtime project progress, career project points, and point sources in the Draw Steel system for Foundry VTT.",
   "url": "https://github.com/bruceamoser/draw-steel-downtime-project-tracker",
   "bugs": "https://github.com/bruceamoser/draw-steel-downtime-project-tracker/issues",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "license": "LICENSE.md",
   "authors": [
     {

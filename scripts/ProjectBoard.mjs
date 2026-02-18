@@ -212,10 +212,18 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
     addHero(state, actor.id);
 
+    // Auto-import any existing project items from the actor
+    const heroEntry = findHero(state, actor.id);
+    const actorProjects = getActorProjects(actor);
+    for (const proj of actorProjects) {
+      addProject(heroEntry, proj.itemId);
+    }
+
     await setState(state);
     this.render();
 
-    ui.notifications.info(`${actor.name} added to the board. Drag project items onto their card to track them.`);
+    const projCount = actorProjects.length;
+    ui.notifications.info(`${actor.name} added to the board${projCount ? ` with ${projCount} project(s).` : "."}`);
   }
 
   async #handleItemDrop(data, event) {
@@ -281,10 +289,18 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
     addHero(state, actor.id);
 
+    // Auto-import any existing project items from the actor
+    const heroEntry = findHero(state, actor.id);
+    const actorProjects = getActorProjects(actor);
+    for (const proj of actorProjects) {
+      addProject(heroEntry, proj.itemId);
+    }
+
     await setState(state);
     this.render();
 
-    ui.notifications.info(`${actor.name} added to the board. Drag project items onto their card to track them.`);
+    const projCount = actorProjects.length;
+    ui.notifications.info(`${actor.name} added to the board${projCount ? ` with ${projCount} project(s).` : "."}`); 
   }
 
   static async #onRemoveHero(event, target) {
@@ -312,18 +328,32 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     const actor = game.actors.get(actorId);
     if (!game.user.isGM && !actor?.isOwner) return;
 
+    const item = actor?.items.get(itemId);
+    const projectName = item?.name ?? "this project";
+
     const confirm = await foundry.applications.api.DialogV2.confirm({
       window: { title: "Remove Project" },
-      content: `<p>Remove this project from the board? Ledger history will be lost.</p>`,
+      content: `<p>Remove <strong>${projectName}</strong> from the board and delete it from ${actor?.name ?? "the character"}? Ledger history will be lost.</p>`,
       yes: { default: true }
     });
     if (!confirm) return;
 
+    // Remove from board state
     const state = getState();
     const heroEntry = findHero(state, actorId);
     if (!heroEntry) return;
     removeProject(heroEntry, itemId);
     await setState(state);
+
+    // Delete the project item from the actor
+    if (item) {
+      try {
+        await item.delete();
+      } catch (err) {
+        console.warn("ds-project-tracker | Failed to delete project item from actor", err);
+      }
+    }
+
     this.render();
   }
 
