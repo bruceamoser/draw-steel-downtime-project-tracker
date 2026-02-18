@@ -5,6 +5,7 @@ import {
   getCareerData, getActorProjects
 } from "./data/BoardState.mjs";
 import { AddPointsDialog } from "./AddPointsDialog.mjs";
+import { AddProjectDialog } from "./AddProjectDialog.mjs";
 import { LedgerDialog } from "./LedgerDialog.mjs";
 
 const MODULE_ID = "ds-project-tracker";
@@ -29,6 +30,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     actions: {
       addOwnHero: ProjectBoard.#onAddOwnHero,
+      addCustomProject: ProjectBoard.#onAddCustomProject,
       removeHero: ProjectBoard.#onRemoveHero,
       removeProject: ProjectBoard.#onRemoveProject,
       addPoints: ProjectBoard.#onAddPoints,
@@ -273,6 +275,18 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /* ─── Action Handlers ─── */
+
+  static async #onAddCustomProject(event, target) {
+    const actorId = target.closest("[data-actor-id]").dataset.actorId;
+    const actor = game.actors.get(actorId);
+    if (!actor) return;
+    if (!game.user.isGM && !actor.isOwner) return;
+
+    new AddProjectDialog({
+      actorId,
+      board: this
+    }).render({ force: true });
+  }
 
   static async #onAddOwnHero(event, target) {
     const actorId = target.dataset.actorId;

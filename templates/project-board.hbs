@@ -124,6 +124,15 @@
     </div>
     {{/if}}
 
+    {{!-- Add custom project button --}}
+    {{#if hero.canEdit}}
+    <div class="add-project-bar">
+      <button type="button" class="btn btn-sm btn-add-project" data-action="addCustomProject" data-tooltip="Create a new custom project">
+        <i class="fas fa-plus"></i> New Project
+      </button>
+    </div>
+    {{/if}}
+
   </div>
   {{/each}}
   {{/if}}

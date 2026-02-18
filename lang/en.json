@@ -57,6 +57,9 @@
         "other": "Other / Director Award"
       }
     },
+    "addProject": {
+      "title": "New Custom Project"
+    },
     "ledger": {
       "title": "Point Ledger",
       "date": "Date",

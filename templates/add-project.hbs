@@ -1,0 +1,44 @@
+<section class="add-project-body">
+
+  <h3>New Project for {{actorName}}</h3>
+
+  <form class="add-project-form">
+    <input type="hidden" name="actorId" value="{{actorId}}" />
+
+    <div class="form-group">
+      <label for="add-proj-name">Project Name</label>
+      <input type="text" id="add-proj-name" name="name" placeholder="e.g. Craft Longsword +1" required autofocus />
+    </div>
+
+    <div class="form-group">
+      <label for="add-proj-type">Type</label>
+      <select id="add-proj-type" name="type">
+        {{#each types}}
+        <option value="{{this.value}}">{{this.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="add-proj-goal">Point Goal</label>
+      <input type="number" id="add-proj-goal" name="goal" min="0" value="0" />
+    </div>
+
+    <div class="form-group">
+      <label for="add-proj-source">Source</label>
+      <input type="text" id="add-proj-source" name="projectSource" placeholder="e.g. Player's Guide p.123" />
+    </div>
+
+    <div class="form-group">
+      <label for="add-proj-prereqs">Prerequisites</label>
+      <input type="text" id="add-proj-prereqs" name="prerequisites" placeholder="e.g. Access to a forge" />
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn" data-action="submitProject">
+        <i class="fas fa-plus"></i> Create Project
+      </button>
+    </div>
+  </form>
+
+</section>

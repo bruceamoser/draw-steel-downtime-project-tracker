@@ -376,3 +376,32 @@
   border-bottom: none;
   padding-top: 6px;
 }
+
+/* ─── Add project bar ─── */
+.ds-project-tracker .add-project-bar {
+  margin-top: 6px;
+  display: flex;
+}
+.ds-project-tracker .btn-add-project {
+  font-size: 0.85em;
+}
+
+/* ─── Add project dialog ─── */
+.ds-project-tracker.add-project-dialog .add-project-body {
+  padding: 10px;
+}
+.ds-project-tracker.add-project-dialog .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+.ds-project-tracker.add-project-dialog .form-group label {
+  font-weight: 600;
+  font-size: 0.85em;
+}
+.ds-project-tracker.add-project-dialog .form-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
