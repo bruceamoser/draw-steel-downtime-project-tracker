@@ -212,18 +212,10 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
     addHero(state, actor.id);
 
-    // Auto-import any existing project items from the actor
-    const heroEntry = findHero(state, actor.id);
-    const actorProjects = getActorProjects(actor);
-    for (const proj of actorProjects) {
-      addProject(heroEntry, proj.itemId);
-    }
-
     await setState(state);
     this.render();
 
-    const projCount = actorProjects.length;
-    ui.notifications.info(`${actor.name} added to the board${projCount ? ` with ${projCount} project(s).` : "."}`);
+    ui.notifications.info(`${actor.name} added to the board. Drag project items onto their card to track them.`);
   }
 
   async #handleItemDrop(data, event) {
@@ -289,17 +281,10 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
     addHero(state, actor.id);
 
-    const heroEntry = findHero(state, actor.id);
-    const actorProjects = getActorProjects(actor);
-    for (const proj of actorProjects) {
-      addProject(heroEntry, proj.itemId);
-    }
-
     await setState(state);
     this.render();
 
-    const projCount = actorProjects.length;
-    ui.notifications.info(`${actor.name} added to the board${projCount ? ` with ${projCount} project(s).` : "."}`); 
+    ui.notifications.info(`${actor.name} added to the board. Drag project items onto their card to track them.`);
   }
 
   static async #onRemoveHero(event, target) {
