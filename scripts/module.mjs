@@ -68,7 +68,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     icon: "fa-solid fa-hammer",
     order: Object.keys(tokenGroup.tools).length,
     button: true,
-    visible: game.user.isGM,
+    visible: true,
     onChange: () => {
       const board = getBoard();
       if (board.rendered) {

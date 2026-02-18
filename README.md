@@ -57,7 +57,7 @@ This module **only** works with the Draw Steel system. It will not initialise in
 
 ### Opening the Board
 
-Click the **hammer icon** in the **Token Controls** toolbar on the left sidebar. The button is visible to GMs only.
+Click the **hammer icon** in the **Token Controls** toolbar on the left sidebar. The button is visible to all players.
 
 ### Adding Heroes
 
