@@ -28,6 +28,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       resizable: true
     },
     actions: {
+      addOwnHero: ProjectBoard.#onAddOwnHero,
       removeHero: ProjectBoard.#onRemoveHero,
       removeProject: ProjectBoard.#onRemoveProject,
       addPoints: ProjectBoard.#onAddPoints,
@@ -102,10 +103,22 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       });
     }
 
+    // For non-GM users, find owned hero actors not yet on the board
+    const ownedHeroes = [];
+    if (!game.user.isGM) {
+      const onBoardIds = new Set(heroes.map(h => h.actorId));
+      for (const actor of game.actors) {
+        if (actor.type === "hero" && actor.isOwner && !onBoardIds.has(actor.id)) {
+          ownedHeroes.push({ actorId: actor.id, name: actor.name, img: actor.img });
+        }
+      }
+    }
+
     return {
       heroes,
-      isEmpty: heroes.length === 0,
-      isGM: game.user.isGM
+      isEmpty: heroes.length === 0 && ownedHeroes.length === 0,
+      isGM: game.user.isGM,
+      ownedHeroes
     };
   }
 
@@ -260,6 +273,34 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /* ─── Action Handlers ─── */
+
+  static async #onAddOwnHero(event, target) {
+    const actorId = target.dataset.actorId;
+    const actor = game.actors.get(actorId);
+    if (!actor || actor.type !== "hero") return;
+    if (!game.user.isGM && !actor.isOwner) return;
+
+    const state = getState();
+    if (findHero(state, actor.id)) {
+      ui.notifications.info(`${actor.name} is already on the board.`);
+      this.render();
+      return;
+    }
+
+    addHero(state, actor.id);
+
+    const heroEntry = findHero(state, actor.id);
+    const actorProjects = getActorProjects(actor);
+    for (const proj of actorProjects) {
+      addProject(heroEntry, proj.itemId);
+    }
+
+    await setState(state);
+    this.render();
+
+    const projCount = actorProjects.length;
+    ui.notifications.info(`${actor.name} added to the board${projCount ? ` with ${projCount} project(s).` : "."}`); 
+  }
 
   static async #onRemoveHero(event, target) {
     const actorId = target.closest("[data-actor-id]").dataset.actorId;

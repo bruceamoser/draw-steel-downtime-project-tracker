@@ -36,6 +36,26 @@
   color: var(--color-text-dark-secondary, #999);
 }
 
+/* ─── Add-own-hero button bar ─── */
+.ds-project-tracker .add-own-hero-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ds-project-tracker .btn-add-own-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+.ds-project-tracker .btn-add-own-hero img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* ─── Hero card ─── */
 .ds-project-tracker .hero-card {
   background: var(--color-cool-5, rgba(0,0,0,0.06));

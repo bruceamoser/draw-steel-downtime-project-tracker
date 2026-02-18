@@ -5,11 +5,28 @@
   <div class="board-empty">
     <i class="fas fa-users fa-3x"></i>
     <p>No heroes registered.</p>
+    {{#if @root.isGM}}
     <p class="hint">Drag a PC actor from the sidebar onto this window to get started.</p>
+    {{else}}
+    <p class="hint">Click the button below to add your character to the board.</p>
+    {{/if}}
   </div>
-  {{else}}
+  {{/if}}
+
+  {{!-- Player "Add my character" buttons --}}
+  {{#if ownedHeroes.length}}
+  <div class="add-own-hero-bar">
+    {{#each ownedHeroes as |oh|}}
+    <button type="button" class="btn btn-add-own-hero" data-action="addOwnHero" data-actor-id="{{oh.actorId}}">
+      <img src="{{oh.img}}" alt="{{oh.name}}" width="24" height="24" />
+      <span>Add {{oh.name}}</span>
+    </button>
+    {{/each}}
+  </div>
+  {{/if}}
 
   {{!-- Hero cards --}}
+  {{#if heroes.length}}
   {{#each heroes as |hero|}}
   <div class="hero-card" data-actor-id="{{hero.actorId}}">
 
@@ -109,6 +126,6 @@
 
   </div>
   {{/each}}
-
   {{/if}}
+
 </section>
