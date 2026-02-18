@@ -12,7 +12,7 @@
         <th class="col-source">Source</th>
         <th class="col-points">Points</th>
         <th class="col-notes">Notes</th>
-        {{#if isGM}}<th class="col-actions"></th>{{/if}}
+        {{#if canEdit}}<th class="col-actions"></th>{{/if}}
       </tr>
     </thead>
     <tbody>
@@ -22,7 +22,7 @@
         <td class="col-source">{{entry.sourceLabel}}</td>
         <td class="col-points">+{{entry.points}}</td>
         <td class="col-notes">{{entry.notes}}</td>
-        {{#if @root.isGM}}
+        {{#if @root.canEdit}}
         <td class="col-actions">
           <button type="button" class="icon-btn" data-action="deleteEntry" data-entry-id="{{entry.id}}" data-tooltip="Delete Entry">
             <i class="fas fa-trash"></i>
@@ -37,7 +37,7 @@
         <td></td>
         <td><strong>Total</strong></td>
         <td><strong>{{total}}</strong>{{#if goal}} / {{goal}}{{/if}}</td>
-        <td colspan="{{#if isGM}}2{{else}}1{{/if}}"></td>
+        <td colspan="{{#if canEdit}}2{{else}}1{{/if}}"></td>
       </tr>
     </tfoot>
   </table>

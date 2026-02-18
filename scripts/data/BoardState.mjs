@@ -33,6 +33,10 @@
 
 const MODULE_ID = "ds-project-tracker";
 const SETTING_KEY = "boardState";
+const SOCKET_NAME = `module.${MODULE_ID}`;
+
+/** Local cache so players see optimistic updates before the GM relay round-trips. */
+let _localStateCache = null;
 
 export function emptyState() {
   return { version: 1, heroes: [] };
@@ -65,6 +69,7 @@ export function randomId(len = 16) {
  * Read the current board state from the world setting.
  */
 export function getState() {
+  if (_localStateCache) return _localStateCache;
   const raw = game.settings.get(MODULE_ID, SETTING_KEY);
   if (!raw || !raw.version) return emptyState();
   return raw;
@@ -74,7 +79,30 @@ export function getState() {
  * Write the full board state to the world setting.
  */
 export async function setState(state) {
-  await game.settings.set(MODULE_ID, SETTING_KEY, state);
+  // Deep-clone so Foundry always detects a change (avoids same-reference issues)
+  const clone = foundry.utils.deepClone(state);
+
+  if (game.user.isGM) {
+    await game.settings.set(MODULE_ID, SETTING_KEY, clone);
+    // Broadcast refresh so every client re-renders immediately
+    game.socket.emit(SOCKET_NAME, { action: "refreshBoard" });
+  } else {
+    // Optimistic local cache so the player's UI updates immediately
+    _localStateCache = clone;
+    const activeGM = game.users.find(u => u.isGM && u.active);
+    if (!activeGM) {
+      ui.notifications.error("No GM is online \u2014 changes cannot be saved.");
+      return;
+    }
+    game.socket.emit(SOCKET_NAME, { action: "setState", state: clone });
+  }
+}
+
+/**
+ * Clear the local optimistic cache (called when an authoritative update arrives).
+ */
+export function invalidateCache() {
+  _localStateCache = null;
 }
 
 /* ─── Hero helpers ─── */

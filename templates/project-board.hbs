@@ -29,7 +29,7 @@
         </div>
         {{/if}}
       </div>
-      {{#if @root.isGM}}
+      {{#if hero.canEdit}}
       <button type="button" class="icon-btn remove-hero" data-action="removeHero" data-tooltip="Remove Hero">
         <i class="fas fa-times"></i>
       </button>
@@ -45,7 +45,7 @@
         <div class="project-header">
           <span class="project-name">{{proj.name}}</span>
           <span class="project-type badge badge-{{proj.type}}">{{proj.typeLabel}}</span>
-          {{#if @root.isGM}}
+          {{#if hero.canEdit}}
           <button type="button" class="icon-btn remove-project" data-action="removeProject" data-tooltip="Remove Project">
             <i class="fas fa-trash"></i>
           </button>
@@ -79,6 +79,7 @@
         {{!-- Action buttons --}}
         <div class="project-actions">
           {{#unless proj.completed}}
+          {{#if hero.canEdit}}
           <button type="button" class="btn btn-sm" data-action="addPoints" data-tooltip="Add Points">
             <i class="fas fa-plus"></i> Add Points
           </button>
@@ -89,6 +90,7 @@
           <button type="button" class="btn btn-sm btn-complete" data-action="completeProject" data-tooltip="Mark Complete">
             <i class="fas fa-check-circle"></i> Complete
           </button>
+          {{/if}}
           {{/if}}
           {{/unless}}
           <button type="button" class="btn btn-sm btn-ledger" data-action="viewLedger" data-tooltip="View Point Ledger">

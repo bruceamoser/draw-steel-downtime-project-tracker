@@ -91,6 +91,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
         actorId: heroEntry.actorId,
         name: actor.name,
         img: actor.img,
+        canEdit: game.user.isGM || actor.isOwner,
         career: career ? {
           name: career.name,
           total: career.projectPoints,
@@ -184,6 +185,12 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       return;
     }
 
+    // Players can only add their own characters
+    if (!game.user.isGM && !actor.isOwner) {
+      ui.notifications.warn("You can only add your own characters to the board.");
+      return;
+    }
+
     const state = getState();
     if (findHero(state, actor.id)) {
       ui.notifications.info(`${actor.name} is already on the board.`);
@@ -216,6 +223,12 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     const actorId = heroCard.dataset.actorId;
     const actor = game.actors.get(actorId);
     if (!actor) return;
+
+    // Players can only add projects to their own characters
+    if (!game.user.isGM && !actor.isOwner) {
+      ui.notifications.warn("You can only add projects to your own characters.");
+      return;
+    }
 
     const item = await fromUuid(data.uuid);
     if (!item || item.type !== "project") {
@@ -251,6 +264,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onRemoveHero(event, target) {
     const actorId = target.closest("[data-actor-id]").dataset.actorId;
     const actor = game.actors.get(actorId);
+    if (!game.user.isGM && !actor?.isOwner) return;
     const name = actor?.name ?? "Unknown";
 
     const confirm = await foundry.applications.api.DialogV2.confirm({
@@ -269,6 +283,8 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onRemoveProject(event, target) {
     const actorId = target.closest("[data-actor-id]").dataset.actorId;
     const itemId = target.closest("[data-item-id]").dataset.itemId;
+    const actor = game.actors.get(actorId);
+    if (!game.user.isGM && !actor?.isOwner) return;
 
     const confirm = await foundry.applications.api.DialogV2.confirm({
       window: { title: "Remove Project" },
@@ -291,6 +307,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     const actor = game.actors.get(actorId);
     const item = actor?.items.get(itemId);
     if (!actor || !item) return;
+    if (!game.user.isGM && !actor.isOwner) return;
 
     new AddPointsDialog({
       actorId,
@@ -306,6 +323,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     const actor = game.actors.get(actorId);
     const item = actor?.items.get(itemId);
     if (!actor || !item) return;
+    if (!game.user.isGM && !actor.isOwner) return;
 
     // Try to call the system's native roll method
     if (typeof item.system?.rollPrompt === "function") {
@@ -334,6 +352,8 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onCompleteProject(event, target) {
     const actorId = target.closest("[data-actor-id]").dataset.actorId;
     const itemId = target.closest("[data-item-id]").dataset.itemId;
+    const actor = game.actors.get(actorId);
+    if (!game.user.isGM && !actor?.isOwner) return;
 
     const confirm = await foundry.applications.api.DialogV2.confirm({
       window: { title: "Complete Project" },

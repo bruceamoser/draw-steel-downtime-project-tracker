@@ -58,6 +58,7 @@ export class LedgerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     const actor = game.actors.get(this._actorId);
     const item = actor?.items.get(this._itemId);
     const goal = item?.system?.goal ?? 0;
+    const canEdit = game.user.isGM || actor?.isOwner;
 
     return {
       projectName: this._projectName,
@@ -65,7 +66,8 @@ export class LedgerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       total,
       goal,
       isEmpty: entries.length === 0,
-      isGM: game.user.isGM
+      isGM: game.user.isGM,
+      canEdit
     };
   }
 
@@ -86,6 +88,10 @@ export class LedgerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onDeleteEntry(event, target) {
     const entryId = target.dataset.entryId;
     if (!entryId) return;
+
+    // Permission check
+    const actor = game.actors.get(this._actorId);
+    if (!game.user.isGM && !actor?.isOwner) return;
 
     const state = getState();
     const heroEntry = findHero(state, this._actorId);

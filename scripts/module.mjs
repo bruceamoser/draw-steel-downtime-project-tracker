@@ -9,6 +9,7 @@
  * Requires the Draw Steel system ("draw-steel").
  */
 import { ProjectBoard } from "./ProjectBoard.mjs";
+import { invalidateCache } from "./data/BoardState.mjs";
 
 const MODULE_ID = "ds-project-tracker";
 const REQUIRED_SYSTEM = "draw-steel";
@@ -80,8 +81,36 @@ Hooks.on("getSceneControlButtons", (controls) => {
   };
 });
 
-/* ─── Hook: ready — log startup ─── */
+/* ─── Hook: ready — socket relay & log startup ─── */
 Hooks.once("ready", () => {
   if (!_systemValid) return;
+
+  // Socket listener: handle relay & refresh messages
+  game.socket.on(`module.${MODULE_ID}`, async (data) => {
+    // GM-only: persist state changes requested by players
+    if (data.action === "setState" && game.user.isGM) {
+      const firstGM = game.users.find(u => u.isGM && u.active);
+      if (game.user === firstGM) {
+        await game.settings.set(MODULE_ID, "boardState", data.state);
+        // Broadcast refresh so all clients (including the originating player) re-render
+        game.socket.emit(`module.${MODULE_ID}`, { action: "refreshBoard" });
+      }
+    }
+
+    // All clients: re-render the board when told to refresh
+    if (data.action === "refreshBoard") {
+      invalidateCache();
+      if (_board?.rendered) _board.render();
+    }
+  });
+
   console.log(`${MODULE_ID} | Project Point Tracker ready`);
+});
+
+/* ─── Hook: updateSetting — re-render board when state changes (safety net) ─── */
+Hooks.on("updateSetting", (setting) => {
+  if (setting.key === `${MODULE_ID}.boardState`) {
+    invalidateCache();
+    if (_board?.rendered) _board.render();
+  }
 });
