@@ -8,5 +8,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Reference data
+/reference/
+
 # OS
 .DS_Store
