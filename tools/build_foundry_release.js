@@ -117,16 +117,16 @@ async function main() {
 
   // Update manifest and download URLs, stamping the current version into the
   // download path while preserving the correct repo.
-  const manifestUrl = `https://github.com/${repo}/releases/latest/download/module.json`;
   const downloadUrl = `https://github.com/${repo}/releases/download/${tag}/${zipBaseName}`;
   const projectUrl = `https://github.com/${repo}`;
+  const rawManifestUrl = `https://raw.githubusercontent.com/${repo}/main/module.json`;
 
   // Ensure the manifest fields are present in the emitted manifest.
   const emitted = {
     ...mod,
     version,
     url: mod.url || projectUrl,
-    manifest: manifestUrl,
+    manifest: rawManifestUrl,
     download: downloadUrl,
   };
 

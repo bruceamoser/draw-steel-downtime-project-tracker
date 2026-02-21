@@ -38,5 +38,7 @@
       "name": "English",
       "path": "lang/en.json"
     }
-  ]
+  ],
+  "manifest": "https://raw.githubusercontent.com/bruceamoser/draw-steel-downtime-project-tracker/main/module.json",
+  "download": "https://github.com/bruceamoser/draw-steel-downtime-project-tracker/releases/download/v0.2.5/ds-project-tracker-v0.2.5.zip"
 }
