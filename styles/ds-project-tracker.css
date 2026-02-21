@@ -3,12 +3,21 @@
    ═══════════════════════════════════════════════════════════ */
 
 /* ─── Board body ─── */
+.ds-project-tracker.project-board .window-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .ds-project-tracker.project-board .project-board-body {
   padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .ds-project-tracker .project-board-body.drag-over {
