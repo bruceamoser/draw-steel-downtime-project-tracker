@@ -2,11 +2,74 @@
    ds-project-tracker — Styles
    ═══════════════════════════════════════════════════════════ */
 
+/* ─── Theme-adaptive colour tokens ───
+   Foundry V13 / Draw Steel defaults to a dark UI.  When the client
+   colour-scheme is switched to "light" the backgrounds become pale
+   but inherited text can stay light → unreadable.  We define our
+   own module-level tokens here and override them for light mode
+   using every detection method Foundry / browsers expose.
+   ───────────────────────────────────────────────────────────── */
+.ds-project-tracker {
+  /* Dark-mode defaults (current behaviour – unchanged) */
+  --dspt-text:           inherit;
+  --dspt-text-muted:     var(--color-text-dark-secondary, #b0b0b0);
+  --dspt-text-faint:     var(--color-text-dark-secondary, #999);
+  --dspt-card-bg:        var(--color-cool-5, rgba(0,0,0,0.06));
+  --dspt-card-border:    var(--color-border-light-2, #555);
+  --dspt-subcard-bg:     var(--color-warm-1, rgba(255,255,255,0.08));
+  --dspt-subcard-border: var(--color-border-light-2, #666);
+}
+
+/* ── Light mode: OS-level fallback ── */
+@media (prefers-color-scheme: light) {
+  .ds-project-tracker {
+    --dspt-text:           var(--color-text-dark-primary, #191813);
+    --dspt-text-muted:     #555;
+    --dspt-text-faint:     #777;
+    --dspt-card-bg:        rgba(0,0,0,0.05);
+    --dspt-card-border:    var(--color-border-light-2, #ccc);
+    --dspt-subcard-bg:     rgba(255,255,255,0.85);
+    --dspt-subcard-border: var(--color-border-light-2, #ddd);
+  }
+}
+
+/* ── Light mode: Foundry V13 theme classes / attributes ──
+   These have higher specificity so they win over @media.         */
+html.theme-light .ds-project-tracker,
+body.theme-light .ds-project-tracker,
+html[data-theme="light"] .ds-project-tracker,
+body[data-theme="light"] .ds-project-tracker,
+.ds-project-tracker[data-color-scheme="light"] {
+  --dspt-text:           var(--color-text-dark-primary, #191813);
+  --dspt-text-muted:     #555;
+  --dspt-text-faint:     #777;
+  --dspt-card-bg:        rgba(0,0,0,0.05);
+  --dspt-card-border:    var(--color-border-light-2, #ccc);
+  --dspt-subcard-bg:     rgba(255,255,255,0.85);
+  --dspt-subcard-border: var(--color-border-light-2, #ddd);
+}
+
+/* ── Dark mode: Foundry classes always restore dark defaults ── */
+html.theme-dark .ds-project-tracker,
+body.theme-dark .ds-project-tracker,
+html[data-theme="dark"] .ds-project-tracker,
+body[data-theme="dark"] .ds-project-tracker,
+.ds-project-tracker[data-color-scheme="dark"] {
+  --dspt-text:           inherit;
+  --dspt-text-muted:     var(--color-text-dark-secondary, #b0b0b0);
+  --dspt-text-faint:     var(--color-text-dark-secondary, #999);
+  --dspt-card-bg:        var(--color-cool-5, rgba(0,0,0,0.06));
+  --dspt-card-border:    var(--color-border-light-2, #555);
+  --dspt-subcard-bg:     var(--color-warm-1, rgba(255,255,255,0.08));
+  --dspt-subcard-border: var(--color-border-light-2, #666);
+}
+
 /* ─── Board body ─── */
 .ds-project-tracker.project-board .window-content {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  color: var(--dspt-text);
 }
 
 .ds-project-tracker.project-board .project-board-body {
@@ -35,14 +98,14 @@
   gap: 8px;
   padding: 48px 24px;
   text-align: center;
-  color: var(--color-text-dark-secondary, #888);
+  color: var(--dspt-text-muted);
 }
 .ds-project-tracker .board-empty i {
   opacity: 0.35;
 }
 .ds-project-tracker .hint {
   font-size: 0.85em;
-  color: var(--color-text-dark-secondary, #999);
+  color: var(--dspt-text-faint);
 }
 
 /* ─── Add-own-hero button bar ─── */
@@ -67,10 +130,11 @@
 
 /* ─── Hero card ─── */
 .ds-project-tracker .hero-card {
-  background: var(--color-cool-5, rgba(0,0,0,0.06));
-  border: 1px solid var(--color-border-light-2, #ccc);
+  background: var(--dspt-card-bg);
+  border: 1px solid var(--dspt-card-border);
   border-radius: 6px;
   padding: 8px 10px;
+  color: var(--dspt-text);
 }
 
 .ds-project-tracker .hero-header {
@@ -107,13 +171,13 @@
 }
 .ds-project-tracker .career-name {
   font-style: italic;
-  color: var(--color-text-dark-secondary, #666);
+  color: var(--dspt-text-muted);
 }
 .ds-project-tracker .career-points {
   white-space: nowrap;
 }
 .ds-project-tracker .career-points .allocated {
-  color: var(--color-text-dark-secondary, #888);
+  color: var(--dspt-text-muted);
   font-size: 0.9em;
 }
 
@@ -123,7 +187,7 @@
   border: none;
   cursor: pointer;
   padding: 2px 5px;
-  color: var(--color-text-dark-secondary, #888);
+  color: var(--dspt-text-muted);
   font-size: 0.85em;
   line-height: 1;
   border-radius: 3px;
@@ -147,10 +211,11 @@
 
 /* ─── Project card ─── */
 .ds-project-tracker .project-card {
-  background: var(--color-warm-1, rgba(255,255,255,0.6));
-  border: 1px solid var(--color-border-light-2, #ddd);
+  background: var(--dspt-subcard-bg);
+  border: 1px solid var(--dspt-subcard-border);
   border-radius: 4px;
   padding: 6px 8px;
+  color: var(--dspt-text);
 }
 .ds-project-tracker .project-card.completed {
   opacity: 0.6;
@@ -226,7 +291,7 @@
   text-align: right;
 }
 .ds-project-tracker .progress-label small {
-  color: var(--color-text-dark-secondary, #888);
+  color: var(--dspt-text-muted);
 }
 
 /* ─── Detail rows ─── */
@@ -235,7 +300,7 @@
   align-items: flex-start;
   gap: 4px;
   font-size: 0.8em;
-  color: var(--color-text-dark-secondary, #666);
+  color: var(--dspt-text-muted);
   padding: 1px 0;
 }
 .ds-project-tracker .detail-row i {
@@ -339,7 +404,7 @@
 
 .ds-project-tracker.ledger-dialog .ledger-empty {
   text-align: center;
-  color: var(--color-text-dark-secondary, #888);
+  color: var(--dspt-text-muted);
   padding: 24px 0;
 }
 
@@ -366,7 +431,7 @@
 }
 .ds-project-tracker .ledger-table .col-date {
   white-space: nowrap;
-  color: var(--color-text-dark-secondary, #888);
+  color: var(--dspt-text-muted);
   min-width: 70px;
 }
 .ds-project-tracker .ledger-table .col-actions {
@@ -413,4 +478,37 @@
   margin-top: 12px;
   display: flex;
   justify-content: flex-end;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Theme-adaptive: dialogs & form controls
+   ═══════════════════════════════════════════════════════════ */
+
+/* Ensure all dialog window-content text inherits the token */
+.ds-project-tracker.add-points-dialog .window-content,
+.ds-project-tracker.add-project-dialog .window-content,
+.ds-project-tracker.ledger-dialog .window-content {
+  color: var(--dspt-text);
+}
+
+/* Form inputs & selects — ensure readable text in every theme */
+.ds-project-tracker input[type="text"],
+.ds-project-tracker input[type="number"],
+.ds-project-tracker select,
+.ds-project-tracker textarea {
+  color: var(--dspt-text);
+  background: var(--dspt-subcard-bg);
+  border-color: var(--dspt-subcard-border);
+}
+
+/* Ledger table header & body text */
+.ds-project-tracker .ledger-table th,
+.ds-project-tracker .ledger-table td {
+  color: var(--dspt-text);
+}
+.ds-project-tracker .ledger-table .col-points {
+  color: #4caf50; /* keep green accent regardless of theme */
+}
+.ds-project-tracker .ledger-table .col-date {
+  color: var(--dspt-text-muted);
 }
