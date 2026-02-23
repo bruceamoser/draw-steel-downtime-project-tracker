@@ -18,6 +18,12 @@
   --dspt-card-border:    var(--color-border-light-2, #555);
   --dspt-subcard-bg:     var(--color-warm-1, rgba(255,255,255,0.08));
   --dspt-subcard-border: var(--color-border-light-2, #666);
+  --dspt-btn-bg:         var(--color-cool-5, #f0f0f0);
+  --dspt-btn-bg-hover:   var(--color-cool-4, #e0e0e0);
+  --dspt-btn-text:       inherit;
+  --dspt-btn-border:     var(--color-border-light-2, #666);
+  --dspt-progress-track: var(--color-cool-4, #444);
+  --dspt-icon-hover-bg:  var(--color-cool-5, rgba(0,0,0,0.08));
 }
 
 /* ── Light mode: OS-level fallback ── */
@@ -30,6 +36,12 @@
     --dspt-card-border:    var(--color-border-light-2, #ccc);
     --dspt-subcard-bg:     rgba(255,255,255,0.85);
     --dspt-subcard-border: var(--color-border-light-2, #ddd);
+    --dspt-btn-bg:         #f0f0f0;
+    --dspt-btn-bg-hover:   #e0e0e0;
+    --dspt-btn-text:       #191813;
+    --dspt-btn-border:     #ccc;
+    --dspt-progress-track: #e0e0e0;
+    --dspt-icon-hover-bg:  rgba(0,0,0,0.06);
   }
 }
 
@@ -47,6 +59,12 @@ body[data-theme="light"] .ds-project-tracker,
   --dspt-card-border:    var(--color-border-light-2, #ccc);
   --dspt-subcard-bg:     rgba(255,255,255,0.85);
   --dspt-subcard-border: var(--color-border-light-2, #ddd);
+  --dspt-btn-bg:         #f0f0f0;
+  --dspt-btn-bg-hover:   #e0e0e0;
+  --dspt-btn-text:       #191813;
+  --dspt-btn-border:     #ccc;
+  --dspt-progress-track: #e0e0e0;
+  --dspt-icon-hover-bg:  rgba(0,0,0,0.06);
 }
 
 /* ── Dark mode: Foundry classes always restore dark defaults ── */
@@ -62,6 +80,12 @@ body[data-theme="dark"] .ds-project-tracker,
   --dspt-card-border:    var(--color-border-light-2, #555);
   --dspt-subcard-bg:     var(--color-warm-1, rgba(255,255,255,0.08));
   --dspt-subcard-border: var(--color-border-light-2, #666);
+  --dspt-btn-bg:         var(--color-cool-5, #f0f0f0);
+  --dspt-btn-bg-hover:   var(--color-cool-4, #e0e0e0);
+  --dspt-btn-text:       inherit;
+  --dspt-btn-border:     var(--color-border-light-2, #666);
+  --dspt-progress-track: var(--color-cool-4, #444);
+  --dspt-icon-hover-bg:  var(--color-cool-5, rgba(0,0,0,0.08));
 }
 
 /* ─── Board body ─── */
@@ -194,7 +218,7 @@ body[data-theme="dark"] .ds-project-tracker,
 }
 .ds-project-tracker .icon-btn:hover {
   color: var(--color-text-hyperlink, #ff6400);
-  background: var(--color-cool-5, rgba(0,0,0,0.08));
+  background: var(--dspt-icon-hover-bg);
 }
 
 /* ─── Project list ─── */
@@ -270,7 +294,7 @@ body[data-theme="dark"] .ds-project-tracker,
 .ds-project-tracker .progress-bar-container {
   flex: 1;
   height: 14px;
-  background: var(--color-cool-4, #e0e0e0);
+  background: var(--dspt-progress-track);
   border-radius: 7px;
   overflow: hidden;
   position: relative;
@@ -328,8 +352,9 @@ body[data-theme="dark"] .ds-project-tracker,
   font-size: 0.78em;
   padding: 3px 8px;
   border-radius: 4px;
-  border: 1px solid var(--color-border-light-2, #ccc);
-  background: var(--color-cool-5, #f0f0f0);
+  border: 1px solid var(--dspt-btn-border);
+  background: var(--dspt-btn-bg);
+  color: var(--dspt-btn-text);
   cursor: pointer;
   white-space: nowrap;
   display: inline-flex;
@@ -337,7 +362,7 @@ body[data-theme="dark"] .ds-project-tracker,
   gap: 4px;
 }
 .ds-project-tracker .btn:hover {
-  background: var(--color-cool-4, #e0e0e0);
+  background: var(--dspt-btn-bg-hover);
   border-color: var(--color-border-highlight, #7b68ee);
 }
 .ds-project-tracker .btn-complete {
