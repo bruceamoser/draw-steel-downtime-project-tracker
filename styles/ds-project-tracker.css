@@ -3,39 +3,39 @@
    ═══════════════════════════════════════════════════════════ */
 
 /* ─── Theme-adaptive colour tokens ───
-   Foundry V13 / Draw Steel defaults to a dark UI.  When the client
-   colour-scheme is switched to "light" the backgrounds become pale
-   but inherited text can stay light → unreadable.  We define our
-   own module-level tokens here and override them for light mode
-   using every detection method Foundry / browsers expose.
+   The Draw Steel system overrides many Foundry CSS custom properties
+   (--color-cool-*, --color-warm-*, --color-border-light-*) to its own
+   palette (orange/amber tones).  To guarantee readability in BOTH light
+   and dark mode we avoid those system vars for backgrounds, borders and
+   text and instead use our own hard-coded, theme-safe values.
    ───────────────────────────────────────────────────────────── */
 .ds-project-tracker {
-  /* Dark-mode defaults (current behaviour – unchanged) */
-  --dspt-text:           inherit;
-  --dspt-text-muted:     var(--color-text-dark-secondary, #b0b0b0);
-  --dspt-text-faint:     var(--color-text-dark-secondary, #999);
-  --dspt-card-bg:        var(--color-cool-5, rgba(0,0,0,0.06));
-  --dspt-card-border:    var(--color-border-light-2, #555);
-  --dspt-subcard-bg:     var(--color-warm-1, rgba(255,255,255,0.08));
-  --dspt-subcard-border: var(--color-border-light-2, #666);
-  --dspt-btn-bg:         var(--color-cool-5, #f0f0f0);
-  --dspt-btn-bg-hover:   var(--color-cool-4, #e0e0e0);
-  --dspt-btn-text:       inherit;
-  --dspt-btn-border:     var(--color-border-light-2, #666);
-  --dspt-progress-track: var(--color-cool-4, #444);
-  --dspt-icon-hover-bg:  var(--color-cool-5, rgba(0,0,0,0.08));
+  /* Dark-mode defaults */
+  --dspt-text:           #e0ddd5;
+  --dspt-text-muted:     #b0ada5;
+  --dspt-text-faint:     #908d85;
+  --dspt-card-bg:        rgba(255,255,255,0.06);
+  --dspt-card-border:    rgba(255,255,255,0.12);
+  --dspt-subcard-bg:     rgba(255,255,255,0.05);
+  --dspt-subcard-border: rgba(255,255,255,0.10);
+  --dspt-btn-bg:         rgba(255,255,255,0.10);
+  --dspt-btn-bg-hover:   rgba(255,255,255,0.18);
+  --dspt-btn-text:       #e0ddd5;
+  --dspt-btn-border:     rgba(255,255,255,0.15);
+  --dspt-progress-track: rgba(255,255,255,0.12);
+  --dspt-icon-hover-bg:  rgba(255,255,255,0.10);
 }
 
 /* ── Light mode: OS-level fallback ── */
 @media (prefers-color-scheme: light) {
   .ds-project-tracker {
-    --dspt-text:           var(--color-text-dark-primary, #191813);
+    --dspt-text:           #191813;
     --dspt-text-muted:     #555;
     --dspt-text-faint:     #777;
     --dspt-card-bg:        rgba(0,0,0,0.05);
-    --dspt-card-border:    var(--color-border-light-2, #ccc);
+    --dspt-card-border:    #ccc;
     --dspt-subcard-bg:     rgba(255,255,255,0.85);
-    --dspt-subcard-border: var(--color-border-light-2, #ddd);
+    --dspt-subcard-border: #ddd;
     --dspt-btn-bg:         #f0f0f0;
     --dspt-btn-bg-hover:   #e0e0e0;
     --dspt-btn-text:       #191813;
@@ -52,13 +52,13 @@ body.theme-light .ds-project-tracker,
 html[data-theme="light"] .ds-project-tracker,
 body[data-theme="light"] .ds-project-tracker,
 .ds-project-tracker[data-color-scheme="light"] {
-  --dspt-text:           var(--color-text-dark-primary, #191813);
+  --dspt-text:           #191813;
   --dspt-text-muted:     #555;
   --dspt-text-faint:     #777;
   --dspt-card-bg:        rgba(0,0,0,0.05);
-  --dspt-card-border:    var(--color-border-light-2, #ccc);
+  --dspt-card-border:    #ccc;
   --dspt-subcard-bg:     rgba(255,255,255,0.85);
-  --dspt-subcard-border: var(--color-border-light-2, #ddd);
+  --dspt-subcard-border: #ddd;
   --dspt-btn-bg:         #f0f0f0;
   --dspt-btn-bg-hover:   #e0e0e0;
   --dspt-btn-text:       #191813;
@@ -67,25 +67,25 @@ body[data-theme="light"] .ds-project-tracker,
   --dspt-icon-hover-bg:  rgba(0,0,0,0.06);
 }
 
-/* ── Dark mode: Foundry classes always restore dark defaults ── */
+/* ── Dark mode: Foundry classes explicitly restore dark defaults ── */
 html.theme-dark .ds-project-tracker,
 body.theme-dark .ds-project-tracker,
 html[data-theme="dark"] .ds-project-tracker,
 body[data-theme="dark"] .ds-project-tracker,
 .ds-project-tracker[data-color-scheme="dark"] {
-  --dspt-text:           inherit;
-  --dspt-text-muted:     var(--color-text-dark-secondary, #b0b0b0);
-  --dspt-text-faint:     var(--color-text-dark-secondary, #999);
-  --dspt-card-bg:        var(--color-cool-5, rgba(0,0,0,0.06));
-  --dspt-card-border:    var(--color-border-light-2, #555);
-  --dspt-subcard-bg:     var(--color-warm-1, rgba(255,255,255,0.08));
-  --dspt-subcard-border: var(--color-border-light-2, #666);
-  --dspt-btn-bg:         var(--color-cool-5, #f0f0f0);
-  --dspt-btn-bg-hover:   var(--color-cool-4, #e0e0e0);
-  --dspt-btn-text:       inherit;
-  --dspt-btn-border:     var(--color-border-light-2, #666);
-  --dspt-progress-track: var(--color-cool-4, #444);
-  --dspt-icon-hover-bg:  var(--color-cool-5, rgba(0,0,0,0.08));
+  --dspt-text:           #e0ddd5;
+  --dspt-text-muted:     #b0ada5;
+  --dspt-text-faint:     #908d85;
+  --dspt-card-bg:        rgba(255,255,255,0.06);
+  --dspt-card-border:    rgba(255,255,255,0.12);
+  --dspt-subcard-bg:     rgba(255,255,255,0.05);
+  --dspt-subcard-border: rgba(255,255,255,0.10);
+  --dspt-btn-bg:         rgba(255,255,255,0.10);
+  --dspt-btn-bg-hover:   rgba(255,255,255,0.18);
+  --dspt-btn-text:       #e0ddd5;
+  --dspt-btn-border:     rgba(255,255,255,0.15);
+  --dspt-progress-track: rgba(255,255,255,0.12);
+  --dspt-icon-hover-bg:  rgba(255,255,255,0.10);
 }
 
 /* ─── Board body ─── */
@@ -170,7 +170,7 @@ body[data-theme="dark"] .ds-project-tracker,
 
 .ds-project-tracker .hero-portrait {
   border-radius: 4px;
-  border: 1px solid var(--color-border-light-tertiary, #aaa);
+  border: 1px solid var(--dspt-card-border);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -385,7 +385,7 @@ body[data-theme="dark"] .ds-project-tracker,
 .ds-project-tracker.add-points-dialog .dialog-project-name {
   margin: 0 0 10px 0;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--color-border-light-2, #ccc);
+  border-bottom: 1px solid var(--dspt-subcard-border);
 }
 
 .ds-project-tracker.add-points-dialog .form-group {
@@ -424,7 +424,7 @@ body[data-theme="dark"] .ds-project-tracker,
 .ds-project-tracker.ledger-dialog .ledger-project-name {
   margin: 0 0 8px 0;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--color-border-light-2, #ccc);
+  border-bottom: 1px solid var(--dspt-subcard-border);
 }
 
 .ds-project-tracker.ledger-dialog .ledger-empty {
@@ -441,12 +441,12 @@ body[data-theme="dark"] .ds-project-tracker,
 .ds-project-tracker .ledger-table th {
   text-align: left;
   padding: 4px 6px;
-  border-bottom: 2px solid var(--color-border-light-2, #ccc);
+  border-bottom: 2px solid var(--dspt-subcard-border);
   font-weight: 600;
 }
 .ds-project-tracker .ledger-table td {
   padding: 3px 6px;
-  border-bottom: 1px solid var(--color-border-light-tertiary, #eee);
+  border-bottom: 1px solid var(--dspt-card-border);
 }
 .ds-project-tracker .ledger-table .col-points {
   text-align: right;
@@ -471,7 +471,7 @@ body[data-theme="dark"] .ds-project-tracker,
 }
 
 .ds-project-tracker .ledger-total-row td {
-  border-top: 2px solid var(--color-border-light-2, #ccc);
+  border-top: 2px solid var(--dspt-subcard-border);
   border-bottom: none;
   padding-top: 6px;
 }
