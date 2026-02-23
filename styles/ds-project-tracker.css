@@ -526,6 +526,47 @@ body[data-theme="dark"] .ds-project-tracker,
   border-color: var(--dspt-subcard-border);
 }
 
+/* Tell the browser how to render native dropdown / datepicker chrome.
+   Without this, <select> option lists open with a white background while
+   our dark-mode text colour makes the entries nearly invisible.          */
+.ds-project-tracker select,
+.ds-project-tracker input {
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  .ds-project-tracker select,
+  .ds-project-tracker input { color-scheme: light; }
+}
+html.theme-light .ds-project-tracker select,
+body.theme-light .ds-project-tracker select,
+html[data-theme="light"] .ds-project-tracker select,
+body[data-theme="light"] .ds-project-tracker select,
+html.theme-light .ds-project-tracker input,
+body.theme-light .ds-project-tracker input,
+html[data-theme="light"] .ds-project-tracker input,
+body[data-theme="light"] .ds-project-tracker input {
+  color-scheme: light;
+}
+
+/* Also style <option> elements directly for browsers that support it */
+.ds-project-tracker select option {
+  background: #2a2a2a;
+  color: #e0ddd5;
+}
+@media (prefers-color-scheme: light) {
+  .ds-project-tracker select option {
+    background: #fff;
+    color: #191813;
+  }
+}
+html.theme-light .ds-project-tracker select option,
+body.theme-light .ds-project-tracker select option,
+html[data-theme="light"] .ds-project-tracker select option,
+body[data-theme="light"] .ds-project-tracker select option {
+  background: #fff;
+  color: #191813;
+}
+
 /* Ledger table header & body text */
 .ds-project-tracker .ledger-table th,
 .ds-project-tracker .ledger-table td {
