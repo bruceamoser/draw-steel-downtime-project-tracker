@@ -253,11 +253,31 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       return;
     }
 
-    // If the item isn't already owned by this actor, create it on the actor
-    let ownedItem = actor.items.get(item.id);
-    if (!ownedItem) {
-      const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
-      ownedItem = created[0];
+    let ownedItem;
+
+    if (isImbuing) {
+      // Use the system's createProject() to convert the treasure into a proper
+      // project item on the actor. This copies prerequisites, roll characteristics,
+      // goal, and source from the treasure's system.project data and links back
+      // to the treasure via system.yield.item.
+      try {
+        ownedItem = await item.system.createProject(actor);
+      } catch (err) {
+        console.error("ds-project-tracker | Failed to create project from imbuing item", err);
+        ui.notifications.error("Failed to create project from imbuing item.");
+        return;
+      }
+      if (!ownedItem) {
+        ui.notifications.error("Failed to create project from imbuing item.");
+        return;
+      }
+    } else {
+      // If the project item isn't already owned by this actor, create it on the actor
+      ownedItem = actor.items.get(item.id);
+      if (!ownedItem) {
+        const created = await actor.createEmbeddedDocuments("Item", [item.toObject()]);
+        ownedItem = created[0];
+      }
     }
 
     const state = getState();
