@@ -246,8 +246,10 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     const item = await fromUuid(data.uuid);
-    if (!item || item.type !== "project") {
-      ui.notifications.warn("Only project items can be dropped onto hero cards.");
+    const isProject = item?.type === "project";
+    const isImbuing = item?.type === "treasure" && item?.system?.project;
+    if (!item || (!isProject && !isImbuing)) {
+      ui.notifications.warn("Only project or imbuing treasure items can be dropped onto hero cards.");
       return;
     }
 

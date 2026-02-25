@@ -179,22 +179,40 @@ export function getCareerData(actor) {
 
 /**
  * Read all project items from an actor.
+ * Supports both native project items (`type: "project"`) and imbuing
+ * treasure items (`type: "treasure"` with `system.project` data).
  * Returns an array of { itemId, name, type, points, goal, rollCharacteristic, prerequisites, projectSource }.
  */
 export function getActorProjects(actor) {
   if (!actor) return [];
   return actor.items
-    .filter(i => i.type === "project")
-    .map(i => ({
-      itemId: i.id,
-      name: i.name,
-      type: i.system?.type ?? "other",
-      points: i.system?.points ?? 0,
-      goal: i.system?.goal ?? 0,
-      rollCharacteristic: i.system?.rollCharacteristic ?? [],
-      prerequisites: i.system?.prerequisites ?? "",
-      projectSource: i.system?.projectSource ?? ""
-    }));
+    .filter(i => i.type === "project" || (i.type === "treasure" && i.system?.project))
+    .map(i => {
+      if (i.type === "project") {
+        return {
+          itemId: i.id,
+          name: i.name,
+          type: i.system?.type ?? "other",
+          points: i.system?.points ?? 0,
+          goal: i.system?.goal ?? 0,
+          rollCharacteristic: i.system?.rollCharacteristic ?? [],
+          prerequisites: i.system?.prerequisites ?? "",
+          projectSource: i.system?.projectSource ?? ""
+        };
+      }
+      // Imbuing treasure — fields are nested under system.project
+      const proj = i.system.project;
+      return {
+        itemId: i.id,
+        name: i.name,
+        type: "crafting",
+        points: proj?.points ?? 0,
+        goal: proj?.goal ?? 0,
+        rollCharacteristic: proj?.rollCharacteristic ?? [],
+        prerequisites: proj?.prerequisites ?? "",
+        projectSource: proj?.source ?? ""
+      };
+    });
 }
 
 /**
