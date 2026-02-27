@@ -11,5 +11,8 @@ pnpm-debug.log*
 # Reference data
 /reference/
 
+# Local docs (not committed)
+ARCHITECTURE.md
+
 # OS
 .DS_Store
