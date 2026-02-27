@@ -1,0 +1,103 @@
+name: Release Module
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Install zip
+        run: sudo apt-get install -y zip
+
+      - name: Build module
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="${{ steps.version.outputs.tag }}"
+          MODULE_ID="ds-project-tracker"
+          REPO="${{ github.repository }}"
+
+          # Stamp version into module.json
+          sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" module.json
+
+          # Stamp download URL to point at this release's zip
+          sed -i "s|\"download\": \".*\"|\"download\": \"https://github.com/${REPO}/releases/download/${TAG}/${MODULE_ID}.zip\"|" module.json
+
+          # Stage module files into dist/<MODULE_ID>/
+          mkdir -p dist/$MODULE_ID
+          cp module.json dist/$MODULE_ID/
+          cp -r scripts templates styles lang LICENSE.md dist/$MODULE_ID/
+
+          # Create zip and top-level module.json for upload
+          cd dist
+          zip -r $MODULE_ID.zip $MODULE_ID/
+          cp $MODULE_ID/module.json module.json
+          rm -rf $MODULE_ID
+          cd ..
+
+          echo "Built dist/module.json and dist/$MODULE_ID.zip for v$VERSION"
+          cat dist/module.json
+
+      - name: Upload assets to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          gh release upload "$TAG" dist/module.json dist/*.zip --clobber
+
+      - name: Notify Foundry VTT Package API
+        env:
+          FOUNDRY_TOKEN: ${{ secrets.FOUNDRY_PACKAGE_RELEASE_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="${{ steps.version.outputs.tag }}"
+          REPO="${{ github.repository }}"
+          MODULE_ID="ds-project-tracker"
+          COMPAT_MIN="13"
+          COMPAT_VERIFIED="13"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://api.foundryvtt.com/_api/packages/release_version/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $FOUNDRY_TOKEN" \
+            -d "{
+              \"id\": \"$MODULE_ID\",
+              \"dry_run\": false,
+              \"release\": {
+                \"version\": \"$VERSION\",
+                \"manifest\": \"https://github.com/${REPO}/releases/download/${TAG}/module.json\",
+                \"notes\": \"https://github.com/${REPO}/releases/tag/${TAG}\",
+                \"compatibility\": {
+                  \"minimum\": \"$COMPAT_MIN\",
+                  \"verified\": \"$COMPAT_VERIFIED\"
+                }
+              }
+            }")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+
+          echo "Status: $HTTP_CODE"
+          echo "Response: $BODY"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "::error::Foundry API returned $HTTP_CODE: $BODY"
+            exit 1
+          fi
+
+          echo "Foundry VTT notified of release $VERSION"
