@@ -18,6 +18,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  */
 export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
+  #activeActorId = null;
+
   /** @override */
   static DEFAULT_OPTIONS = {
     id: "ds-project-tracker-board",
@@ -29,6 +31,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       resizable: true
     },
     actions: {
+      selectHeroTab: ProjectBoard.#onSelectHeroTab,
       addOwnHero: ProjectBoard.#onAddOwnHero,
       addCustomProject: ProjectBoard.#onAddCustomProject,
       removeHero: ProjectBoard.#onRemoveHero,
@@ -116,8 +119,26 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       }
     }
 
+    const actorIds = new Set(heroes.map(h => h.actorId));
+    if (heroes.length === 0) {
+      this.#activeActorId = null;
+    } else if (!this.#activeActorId || !actorIds.has(this.#activeActorId)) {
+      this.#activeActorId = heroes[0].actorId;
+    }
+
+    const heroTabs = heroes.map(hero => ({
+      actorId: hero.actorId,
+      name: hero.name,
+      img: hero.img,
+      isActive: hero.actorId === this.#activeActorId
+    }));
+
+    const activeHero = heroes.find(h => h.actorId === this.#activeActorId) ?? null;
+
     return {
       heroes,
+      heroTabs,
+      activeHero,
       isEmpty: heroes.length === 0 && ownedHeroes.length === 0,
       isGM: game.user.isGM,
       ownedHeroes
@@ -213,6 +234,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     addHero(state, actor.id);
+    this.#activeActorId = actor.id;
 
     // Auto-import any existing project items from the actor
     const heroEntry = findHero(state, actor.id);
@@ -226,6 +248,13 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const projCount = actorProjects.length;
     ui.notifications.info(`${actor.name} added to the board${projCount ? ` with ${projCount} project(s).` : "."}`);
+  }
+
+  static async #onSelectHeroTab(event, target) {
+    const actorId = target.dataset.actorId;
+    if (!actorId) return;
+    this.#activeActorId = actorId;
+    this.render();
   }
 
   async #handleItemDrop(data, event) {
@@ -324,6 +353,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     addHero(state, actor.id);
+    this.#activeActorId = actor.id;
 
     // Auto-import any existing project items from the actor
     const heroEntry = findHero(state, actor.id);

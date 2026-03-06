@@ -152,6 +152,44 @@ body[data-theme="dark"] .ds-project-tracker,
   object-fit: cover;
 }
 
+/* ─── Hero tabs ─── */
+.ds-project-tracker .hero-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.ds-project-tracker .hero-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--dspt-btn-border);
+  background: var(--dspt-btn-bg);
+  color: var(--dspt-btn-text);
+  cursor: pointer;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  font-size: 0.85em;
+}
+
+.ds-project-tracker .hero-tab:hover {
+  background: var(--dspt-btn-bg-hover);
+}
+
+.ds-project-tracker .hero-tab.active {
+  border-color: var(--color-border-highlight, #7b68ee);
+  background: var(--dspt-btn-bg-hover);
+}
+
+.ds-project-tracker .hero-tab img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* ─── Hero card ─── */
 .ds-project-tracker .hero-card {
   background: var(--dspt-card-bg);

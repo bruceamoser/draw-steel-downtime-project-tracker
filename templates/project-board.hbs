@@ -25,28 +25,46 @@
   </div>
   {{/if}}
 
-  {{!-- Hero cards --}}
-  {{#if heroes.length}}
-  {{#each heroes as |hero|}}
-  <div class="hero-card" data-actor-id="{{hero.actorId}}">
+  {{!-- Hero tabs --}}
+  {{#if heroTabs.length}}
+  <div class="hero-tabs" role="tablist" aria-label="Party Members">
+    {{#each heroTabs as |heroTab|}}
+    <button
+      type="button"
+      class="hero-tab {{#if heroTab.isActive}}active{{/if}}"
+      data-action="selectHeroTab"
+      data-actor-id="{{heroTab.actorId}}"
+      role="tab"
+      aria-selected="{{#if heroTab.isActive}}true{{else}}false{{/if}}"
+    >
+      <img src="{{heroTab.img}}" alt="{{heroTab.name}}" width="24" height="24" />
+      <span>{{heroTab.name}}</span>
+    </button>
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{!-- Active hero card --}}
+  {{#if activeHero}}
+  <div class="hero-card" data-actor-id="{{activeHero.actorId}}">
 
     {{!-- Hero header --}}
     <div class="hero-header">
-      <img class="hero-portrait" src="{{hero.img}}" alt="{{hero.name}}" width="48" height="48" />
+      <img class="hero-portrait" src="{{activeHero.img}}" alt="{{activeHero.name}}" width="48" height="48" />
       <div class="hero-info">
-        <h3 class="hero-name">{{hero.name}}</h3>
-        {{#if hero.career}}
+        <h3 class="hero-name">{{activeHero.name}}</h3>
+        {{#if activeHero.career}}
         <div class="career-line">
-          <span class="career-name">{{hero.career.name}}</span>
-          <span class="career-points" title="Career Project Points: {{hero.career.remaining}} remaining of {{hero.career.total}} total ({{hero.career.allocated}} allocated)">
+          <span class="career-name">{{activeHero.career.name}}</span>
+          <span class="career-points" title="Career Project Points: {{activeHero.career.remaining}} remaining of {{activeHero.career.total}} total ({{activeHero.career.allocated}} allocated)">
             <i class="fas fa-coins"></i>
-            <strong>{{hero.career.remaining}}</strong> / {{hero.career.total}} PP
-            {{#if hero.career.allocated}}<span class="allocated">({{hero.career.allocated}} allocated)</span>{{/if}}
+            <strong>{{activeHero.career.remaining}}</strong> / {{activeHero.career.total}} PP
+            {{#if activeHero.career.allocated}}<span class="allocated">({{activeHero.career.allocated}} allocated)</span>{{/if}}
           </span>
         </div>
         {{/if}}
       </div>
-      {{#if hero.canEdit}}
+      {{#if activeHero.canEdit}}
       <button type="button" class="icon-btn remove-hero" data-action="removeHero" data-tooltip="Remove Hero">
         <i class="fas fa-times"></i>
       </button>
@@ -54,15 +72,15 @@
     </div>
 
     {{!-- Projects --}}
-    {{#if hero.projects.length}}
+    {{#if activeHero.projects.length}}
     <div class="project-list">
-      {{#each hero.projects as |proj|}}
+      {{#each activeHero.projects as |proj|}}
       <div class="project-card {{#if proj.completed}}completed{{/if}}" data-item-id="{{proj.itemId}}">
 
         <div class="project-header">
           <span class="project-name">{{proj.name}}</span>
           <span class="project-type badge badge-{{proj.type}}">{{proj.typeLabel}}</span>
-          {{#if hero.canEdit}}
+          {{#if activeHero.canEdit}}
           <button type="button" class="icon-btn remove-project" data-action="removeProject" data-tooltip="Remove Project">
             <i class="fas fa-trash"></i>
           </button>
@@ -96,7 +114,7 @@
         {{!-- Action buttons --}}
         <div class="project-actions">
           {{#unless proj.completed}}
-          {{#if hero.canEdit}}
+          {{#if activeHero.canEdit}}
           <button type="button" class="btn btn-sm" data-action="addPoints" data-tooltip="Add Points">
             <i class="fas fa-plus"></i> Add Points
           </button>
@@ -125,7 +143,7 @@
     {{/if}}
 
     {{!-- Add custom project button --}}
-    {{#if hero.canEdit}}
+    {{#if activeHero.canEdit}}
     <div class="add-project-bar">
       <button type="button" class="btn btn-sm btn-add-project" data-action="addCustomProject" data-tooltip="Create a new custom project">
         <i class="fas fa-plus"></i> New Project
@@ -134,7 +152,6 @@
     {{/if}}
 
   </div>
-  {{/each}}
   {{/if}}
 
 </section>
