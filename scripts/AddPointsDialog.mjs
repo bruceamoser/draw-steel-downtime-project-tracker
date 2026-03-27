@@ -55,11 +55,12 @@ export class AddPointsDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       { value: "career", label: "Career Points" },
       { value: "roll", label: "Project Roll" },
       { value: "guide", label: "Guide Studied" },
-      { value: "follower", label: "Follower Work" },
-      { value: "perk", label: "Traveling Artisan/Sage" },
-      { value: "collaboration", label: "Hero Collaboration" },
-      { value: "event", label: "Project Event" },
-      { value: "other", label: "Other / Director Award" }
+      { value: "follower", label: "Artisan/Sage Follower Roll" },
+      { value: "perk", label: "Traveling Artisan/Sage Perk" },
+      { value: "collaboration", label: "Another Hero's Project Roll" },
+      { value: "faction", label: "Faction Helper Roll" },
+      { value: "event", label: "Project Event Adjustment" },
+      { value: "other", label: "Director Award / Other" }
     ];
 
     // Mark selected
@@ -72,7 +73,8 @@ export class AddPointsDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       sources,
       defaultSource: this._defaultSource,
       actorId: this._actorId,
-      itemId: this._itemId
+      itemId: this._itemId,
+      sourceGuidance: "Use manual entries for guides, follower help, perks, faction help, collaboration, and Director awards. The board's native buttons handle project rolls, career point spending, and event-table draws when the Draw Steel system exposes them."
     };
   }
 
@@ -108,14 +110,39 @@ export class AddPointsDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     addLedgerEntry(projEntry, { source, points: numPoints, notes: notes ?? "" });
+
+    const actor = game.actors.get(actorId);
+    const item = actor?.items.get(itemId);
+
+    if (source === "career") {
+      const careerItem = actor?.system?.career;
+      const availableCareerPoints = careerItem?.system?.projectPoints ?? 0;
+
+      if (!careerItem) {
+        ui.notifications.error("This hero has no career item to spend project points from.");
+        return;
+      }
+
+      if (numPoints > availableCareerPoints) {
+        ui.notifications.warn(`Only ${availableCareerPoints} career project point(s) are available.`);
+        return;
+      }
+
+      try {
+        await careerItem.update({ "system.projectPoints": availableCareerPoints - numPoints });
+      } catch (err) {
+        console.warn("ds-project-tracker | Failed to spend career points from career item", err);
+        ui.notifications.error("Failed to spend career project points from the hero's career.");
+        return;
+      }
+    }
+
     await setState(state);
 
     // Optionally sync points back to the system item
     const syncEnabled = game.settings.get(MODULE_ID, "syncPoints");
     if (syncEnabled) {
       try {
-        const actor = game.actors.get(actorId);
-        const item = actor?.items.get(itemId);
         if (item) {
           const newTotal = ledgerTotal(projEntry);
           await item.update({ "system.points": newTotal });

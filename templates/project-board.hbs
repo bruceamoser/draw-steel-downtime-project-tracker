@@ -25,25 +25,29 @@
   </div>
   {{/if}}
 
-  {{!-- Hero tabs --}}
-  {{#if heroTabs.length}}
-  <div class="hero-tabs" role="tablist" aria-label="Party Members">
-    {{#each heroTabs as |heroTab|}}
-    <button
-      type="button"
-      class="hero-tab {{#if heroTab.isActive}}active{{/if}}"
-      data-action="selectHeroTab"
-      data-actor-id="{{heroTab.actorId}}"
-      role="tab"
-      aria-selected="{{#if heroTab.isActive}}true{{else}}false{{/if}}"
-    >
-      <img src="{{heroTab.img}}" alt="{{heroTab.name}}" width="24" height="24" />
-      <span>{{heroTab.name}}</span>
-    </button>
-    {{/each}}
+  {{#unless isEmpty}}
+  <div class="project-board-toolbar">
+    {{!-- Hero tabs --}}
+    {{#if heroTabs.length}}
+    <div class="hero-tabs" role="tablist" aria-label="Party Members">
+      {{#each heroTabs as |heroTab|}}
+      <button
+        type="button"
+        class="hero-tab {{#if heroTab.isActive}}active{{/if}}"
+        data-action="selectHeroTab"
+        data-actor-id="{{heroTab.actorId}}"
+        role="tab"
+        aria-selected="{{#if heroTab.isActive}}true{{else}}false{{/if}}"
+      >
+        <img src="{{heroTab.img}}" alt="{{heroTab.name}}" width="24" height="24" />
+        <span>{{heroTab.name}}</span>
+      </button>
+      {{/each}}
+    </div>
+    {{/if}}
   </div>
-  {{/if}}
 
+  <div class="project-board-scroll">
   {{!-- Active hero card --}}
   {{#if activeHero}}
   <div class="hero-card" data-actor-id="{{activeHero.actorId}}">
@@ -56,10 +60,10 @@
         {{#if activeHero.career}}
         <div class="career-line">
           <span class="career-name">{{activeHero.career.name}}</span>
-          <span class="career-points" title="Career Project Points: {{activeHero.career.remaining}} remaining of {{activeHero.career.total}} total ({{activeHero.career.allocated}} allocated)">
+          <span class="career-points" title="Career project points currently available on the hero sheet: {{activeHero.career.available}}{{#if activeHero.career.trackedSpent}}. Tracker ledger career entries: {{activeHero.career.trackedSpent}}{{/if}}">
             <i class="fas fa-coins"></i>
-            <strong>{{activeHero.career.remaining}}</strong> / {{activeHero.career.total}} PP
-            {{#if activeHero.career.allocated}}<span class="allocated">({{activeHero.career.allocated}} allocated)</span>{{/if}}
+            <strong>{{activeHero.career.available}}</strong> PP available
+            {{#if activeHero.career.trackedSpent}}<span class="allocated">({{activeHero.career.trackedSpent}} tracked spent)</span>{{/if}}
           </span>
         </div>
         {{/if}}
@@ -115,12 +119,22 @@
         <div class="project-actions">
           {{#unless proj.completed}}
           {{#if activeHero.canEdit}}
+          {{#if proj.canSpendCareerPoints}}
+          <button type="button" class="btn btn-sm btn-career" data-action="spendCareerPoints" data-tooltip="Spend Career Points">
+            <i class="fas fa-hammer"></i> Spend PP
+          </button>
+          {{/if}}
           <button type="button" class="btn btn-sm" data-action="addPoints" data-tooltip="Add Points">
             <i class="fas fa-plus"></i> Add Points
           </button>
           <button type="button" class="btn btn-sm" data-action="rollProgress" data-tooltip="Roll for Progress">
             <i class="fas fa-dice-d20"></i> Roll
           </button>
+          {{#if proj.canDrawEvent}}
+          <button type="button" class="btn btn-sm btn-event" data-action="drawProjectEvent" data-tooltip="Draw Project Event">
+            <i class="fas fa-sparkles"></i> Event
+          </button>
+          {{/if}}
           {{#if proj.canComplete}}
           <button type="button" class="btn btn-sm btn-complete" data-action="completeProject" data-tooltip="Mark Complete">
             <i class="fas fa-check-circle"></i> Complete
@@ -153,5 +167,8 @@
 
   </div>
   {{/if}}
+  </div>
+  {{/if}}
+  {{/unless}}
 
 </section>

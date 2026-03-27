@@ -97,10 +97,23 @@ body[data-theme="dark"] .ds-project-tracker,
 }
 
 .ds-project-tracker.project-board .project-board-body {
-  padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+  min-height: 0;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.ds-project-tracker.project-board .project-board-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ds-project-tracker.project-board .project-board-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -410,6 +423,16 @@ body[data-theme="dark"] .ds-project-tracker,
 }
 .ds-project-tracker .btn-complete:hover {
   background: #388e3c;
+}
+
+.ds-project-tracker .btn-event {
+  background: #5f6f86;
+  border-color: #4c596c;
+  color: #fff;
+}
+
+.ds-project-tracker .btn-event:hover {
+  background: #4c596c;
 }
 
 /* ═══════════════════════════════════════════════════════════

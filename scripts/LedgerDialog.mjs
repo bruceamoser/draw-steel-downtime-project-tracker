@@ -76,11 +76,12 @@ export class LedgerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       career: "Career Points",
       roll: "Project Roll",
       guide: "Guide Studied",
-      follower: "Follower Work",
-      perk: "Artisan/Sage Perk",
-      collaboration: "Collaboration",
-      event: "Project Event",
-      other: "Other"
+      follower: "Artisan/Sage Follower Roll",
+      perk: "Traveling Artisan/Sage Perk",
+      collaboration: "Another Hero's Project Roll",
+      faction: "Faction Helper Roll",
+      event: "Project Event Adjustment",
+      other: "Director Award / Other"
     };
     return map[source] ?? source;
   }

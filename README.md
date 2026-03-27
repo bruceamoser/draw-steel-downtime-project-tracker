@@ -14,11 +14,11 @@ Track career project points, point sources, and completion across your entire pa
 - **Party-wide project board** — See all heroes and their active projects in one window.
 - **Drag & drop** — Drag hero actors from the sidebar onto the board to register them. Drag project items onto a hero card to assign projects.
 - **Auto-import** — When a hero is added, their existing project items are automatically imported.
-- **Career project points** — Shows each hero's career name with remaining/total project points and how much has been allocated.
+- **Career project points** — Shows each hero's career name, the project points still available on their hero sheet, and the career-point spending tracked in the board ledger.
 - **Point ledger** — Every point addition is logged with a source, timestamp, and optional notes. View the full history per project.
-- **Multiple point sources** — Career points, project rolls, guide studied, follower work, artisan/sage perks, hero collaboration, project events, and director awards.
+- **Rules-aligned point sources** — Track career points, project rolls, guides, artisan/sage follower rolls, Traveling Artisan or Sage perks, collaboration rolls, faction helper rolls, project event adjustments, and Director awards.
 - **Progress tracking** — Visual progress bar per project showing points earned vs. goal.
-- **Roll for progress** — Trigger the Draw Steel system's native project roll (`item.system.rollPrompt()`), or fall back to manual entry.
+- **Native Draw Steel actions** — Trigger the Draw Steel system's native project roll (`item.system.roll()`), spend career points (`item.system.spendCareerPoints()`), and draw project events (`item.system.drawEventsTable()`) from the board when available.
 - **Point sync** — Optionally syncs ledger totals back to the project item's `system.points` field so the character sheet stays up-to-date.
 - **Complete projects** — Mark a project as complete when the goal is reached.
 
@@ -77,9 +77,17 @@ Click **Add Points** on a project card:
 3. Optionally add **Notes** to describe this entry.
 4. Click **Add to Ledger**.
 
+Use manual entries for rule-backed sources that the Draw Steel system does not currently automate on the project item, such as guides, artisan/sage follower help, Traveling Artisan or Sage, faction helper rolls, collaboration, and Director awards.
+
 ### Rolling for Progress
 
-Click **Roll** on a project card. If the Draw Steel system supports native project rolls, that will be triggered. Otherwise, the Add Points dialog opens pre-set to the "Project Roll" source for manual entry.
+Click **Roll** on a project card. If the Draw Steel system supports native project rolls, that workflow is triggered and the resulting point gain is mirrored into the tracker ledger. Otherwise, the Add Points dialog opens pre-set to the "Project Roll" source for manual entry.
+
+### Spending Career Points and Events
+
+- Click **Spend PP** to use the Draw Steel system's native career-point spending workflow. The tracker records the applied amount in the ledger.
+- Click **Event** to draw from the project's configured event table when the project has one.
+- Event outcomes are not always a simple point gain. Some events change the project goal, halve a roll, or grant outside help, so use manual ledger entries and notes when the table result needs tracker-side bookkeeping.
 
 ### Viewing the Ledger
 

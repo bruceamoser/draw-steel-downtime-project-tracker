@@ -50,11 +50,12 @@
         "career": "Career Points",
         "roll": "Project Roll",
         "guide": "Guide Studied",
-        "follower": "Follower Work",
-        "perk": "Traveling Artisan/Sage",
-        "collaboration": "Hero Collaboration",
-        "event": "Project Event",
-        "other": "Other / Director Award"
+        "follower": "Artisan/Sage Follower Roll",
+        "perk": "Traveling Artisan/Sage Perk",
+        "collaboration": "Another Hero's Project Roll",
+        "faction": "Faction Helper Roll",
+        "event": "Project Event Adjustment",
+        "other": "Director Award / Other"
       }
     },
     "addProject": {

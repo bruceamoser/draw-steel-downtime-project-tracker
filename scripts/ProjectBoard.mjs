@@ -18,7 +18,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  */
 export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
-  #activeActorId = null;
+  _activeActorId = null;
 
   /** @override */
   static DEFAULT_OPTIONS = {
@@ -36,8 +36,10 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       addCustomProject: ProjectBoard.#onAddCustomProject,
       removeHero: ProjectBoard.#onRemoveHero,
       removeProject: ProjectBoard.#onRemoveProject,
+      spendCareerPoints: ProjectBoard.#onSpendCareerPoints,
       addPoints: ProjectBoard.#onAddPoints,
       rollProgress: ProjectBoard.#onRollProgress,
+      drawProjectEvent: ProjectBoard.#onDrawProjectEvent,
       completeProject: ProjectBoard.#onCompleteProject,
       viewLedger: ProjectBoard.#onViewLedger
     }
@@ -63,6 +65,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       const career = getCareerData(actor);
       const actorProjects = getActorProjects(actor);
       const careerAllocated = totalCareerAllocated(heroEntry);
+      const availableCareerPoints = career?.projectPoints ?? 0;
 
       const projects = [];
       for (const projEntry of heroEntry.projects) {
@@ -84,6 +87,8 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
           points: displayPoints,
           goal,
           pct,
+          canSpendCareerPoints: availableCareerPoints > 0 && (!goal || displayPoints < goal) && !projEntry.completed,
+          canDrawEvent: Boolean(actorProj?.events) && typeof item.system?.drawEventsTable === "function" && !projEntry.completed,
           canComplete: pct >= 100 && !projEntry.completed,
           completed: projEntry.completed,
           rollCharacteristic: actorProj?.rollCharacteristic ?? [],
@@ -100,9 +105,8 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
         canEdit: game.user.isGM || actor.isOwner,
         career: career ? {
           name: career.name,
-          total: career.projectPoints,
-          allocated: careerAllocated,
-          remaining: career.projectPoints - careerAllocated
+          available: availableCareerPoints,
+          trackedSpent: careerAllocated
         } : null,
         projects
       });
@@ -121,19 +125,19 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const actorIds = new Set(heroes.map(h => h.actorId));
     if (heroes.length === 0) {
-      this.#activeActorId = null;
-    } else if (!this.#activeActorId || !actorIds.has(this.#activeActorId)) {
-      this.#activeActorId = heroes[0].actorId;
+      this._activeActorId = null;
+    } else if (!this._activeActorId || !actorIds.has(this._activeActorId)) {
+      this._activeActorId = heroes[0].actorId;
     }
 
     const heroTabs = heroes.map(hero => ({
       actorId: hero.actorId,
       name: hero.name,
       img: hero.img,
-      isActive: hero.actorId === this.#activeActorId
+      isActive: hero.actorId === this._activeActorId
     }));
 
-    const activeHero = heroes.find(h => h.actorId === this.#activeActorId) ?? null;
+    const activeHero = heroes.find(h => h.actorId === this._activeActorId) ?? null;
 
     return {
       heroes,
@@ -234,7 +238,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     addHero(state, actor.id);
-    this.#activeActorId = actor.id;
+  this._activeActorId = actor.id;
 
     // Auto-import any existing project items from the actor
     const heroEntry = findHero(state, actor.id);
@@ -253,7 +257,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onSelectHeroTab(event, target) {
     const actorId = target.dataset.actorId;
     if (!actorId) return;
-    this.#activeActorId = actorId;
+    this._activeActorId = actorId;
     this.render();
   }
 
@@ -353,7 +357,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     addHero(state, actor.id);
-    this.#activeActorId = actor.id;
+    this._activeActorId = actor.id;
 
     // Auto-import any existing project items from the actor
     const heroEntry = findHero(state, actor.id);
@@ -423,6 +427,54 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     this.render();
   }
 
+  static async #onSpendCareerPoints(event, target) {
+    const actorId = target.closest("[data-actor-id]").dataset.actorId;
+    const itemId = target.closest("[data-item-id]").dataset.itemId;
+    const actor = game.actors.get(actorId);
+    const item = actor?.items.get(itemId);
+    if (!actor || !item) return;
+    if (!game.user.isGM && !actor.isOwner) return;
+
+    if (typeof item.system?.spendCareerPoints === "function") {
+      try {
+        const previousProjectPoints = item.system?.points ?? 0;
+        const previousCareerPoints = actor.system?.career?.system?.projectPoints ?? 0;
+        await item.system.spendCareerPoints();
+
+        const spentPoints = Math.max(0, previousCareerPoints - (actor.system?.career?.system?.projectPoints ?? 0));
+        const gainedPoints = Math.max(0, (item.system?.points ?? 0) - previousProjectPoints);
+
+        if (spentPoints > 0 || gainedPoints > 0) {
+          const state = getState();
+          const heroEntry = findHero(state, actorId);
+          const projectEntry = heroEntry ? findProject(heroEntry, itemId) : null;
+
+          if (projectEntry) {
+            addLedgerEntry(projectEntry, {
+              source: "career",
+              points: spentPoints || gainedPoints,
+              notes: "Applied via native Spend Career Points"
+            });
+            await setState(state);
+          }
+        }
+
+        this.render();
+        return;
+      } catch (err) {
+        console.warn("ds-project-tracker | spendCareerPoints() failed, falling back to manual entry", err);
+      }
+    }
+
+    new AddPointsDialog({
+      actorId,
+      itemId,
+      projectName: item.name,
+      board: this,
+      defaultSource: "career"
+    }).render({ force: true });
+  }
+
   static async #onAddPoints(event, target) {
     const actorId = target.closest("[data-actor-id]").dataset.actorId;
     const itemId = target.closest("[data-item-id]").dataset.itemId;
@@ -447,17 +499,33 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!actor || !item) return;
     if (!game.user.isGM && !actor.isOwner) return;
 
-    // Try to call the system's native roll method
-    if (typeof item.system?.rollPrompt === "function") {
+    // Prefer the system's native project workflow so points, breakthroughs,
+    // and events are applied exactly the same way as the hero sheet.
+    if (typeof item.system?.roll === "function") {
       try {
-        await item.system.rollPrompt();
-        // After the roll, the system should update item.system.points.
-        // We'll detect the change on next render.
-        // Optionally, capture the chat message to auto-log to ledger.
+        const previousPoints = item.system?.points ?? 0;
+        await item.system.roll();
+
+        const gainedPoints = Math.max(0, (item.system?.points ?? 0) - previousPoints);
+        if (gainedPoints > 0) {
+          const state = getState();
+          const heroEntry = findHero(state, actorId);
+          const projectEntry = heroEntry ? findProject(heroEntry, itemId) : null;
+
+          if (projectEntry) {
+            addLedgerEntry(projectEntry, {
+              source: "roll",
+              points: gainedPoints,
+              notes: "Applied via native project roll"
+            });
+            await setState(state);
+          }
+        }
+
         this.render();
         return;
       } catch (err) {
-        console.warn("ds-project-tracker | rollPrompt() failed, falling back to manual", err);
+        console.warn("ds-project-tracker | roll() failed, falling back to manual", err);
       }
     }
 
@@ -469,6 +537,23 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       board: this,
       defaultSource: "roll"
     }).render({ force: true });
+  }
+
+  static async #onDrawProjectEvent(event, target) {
+    const actorId = target.closest("[data-actor-id]").dataset.actorId;
+    const itemId = target.closest("[data-item-id]").dataset.itemId;
+    const actor = game.actors.get(actorId);
+    const item = actor?.items.get(itemId);
+    if (!actor || !item) return;
+    if (!game.user.isGM && !actor.isOwner) return;
+    if (typeof item.system?.drawEventsTable !== "function") return;
+
+    try {
+      await item.system.drawEventsTable();
+      this.render();
+    } catch (err) {
+      console.warn("ds-project-tracker | drawEventsTable() failed", err);
+    }
   }
 
   static async #onCompleteProject(event, target) {

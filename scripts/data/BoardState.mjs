@@ -25,7 +25,7 @@
  * {
  *   id: string,        // random unique id
  *   timestamp: number,  // Date.now()
- *   source: "career"|"roll"|"guide"|"follower"|"perk"|"collaboration"|"event"|"other",
+ *   source: "career"|"roll"|"guide"|"follower"|"perk"|"collaboration"|"faction"|"event"|"other",
  *   points: number,
  *   notes: string
  * }
@@ -179,7 +179,7 @@ export function getCareerData(actor) {
 
 /**
  * Read all project items from an actor.
- * Returns an array of { itemId, name, type, points, goal, rollCharacteristic, prerequisites, projectSource }.
+ * Returns an array of { itemId, name, type, points, goal, rollCharacteristic, prerequisites, projectSource, events }.
  */
 export function getActorProjects(actor) {
   if (!actor) return [];
@@ -193,7 +193,8 @@ export function getActorProjects(actor) {
       goal: i.system?.goal ?? 0,
       rollCharacteristic: i.system?.rollCharacteristic ?? [],
       prerequisites: i.system?.prerequisites ?? "",
-      projectSource: i.system?.projectSource ?? ""
+      projectSource: i.system?.projectSource ?? "",
+      events: i.system?.events ?? ""
     }));
 }
 
