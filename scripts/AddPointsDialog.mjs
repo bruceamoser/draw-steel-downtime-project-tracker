@@ -73,7 +73,7 @@ export class AddPointsDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       defaultSource: this._defaultSource,
       actorId: this._actorId,
       itemId: this._itemId,
-      sourceGuidance: "Use manual entries for guides, follower help, perks, faction help, collaboration, and Director awards. Event-table rolls and results are intentionally not logged in the tracker ledger."
+      sourceGuidance: "Use manual entries for guides, follower help, perks, faction help, collaboration, and Director awards. Project events are logged automatically when rolled from the board."
     };
   }
 

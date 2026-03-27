@@ -87,7 +87,7 @@ Click **Roll** on a project card. If the Draw Steel system supports native proje
 
 - Click **Spend PP** to use the Draw Steel system's native career-point spending workflow. The tracker records the applied amount in the ledger.
 - Click **Event** to draw from the project's configured event table when the project has one.
-- Event-table rolls and event results are intentionally not logged in the tracker ledger.
+- Event-table draws are logged to the project ledger with the rolled outcome in the notes column. If an event directly changes project points, that delta is recorded on the same ledger entry.
 
 ### Viewing the Ledger
 

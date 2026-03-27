@@ -156,6 +156,25 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     return map[type] ?? "Other";
   }
 
+  static #plainText(html) {
+    if (!html) return "";
+    const doc = new DOMParser().parseFromString(String(html), "text/html");
+    return (doc.body?.textContent ?? "").replace(/\s+/g, " ").trim();
+  }
+
+  static #eventResultSummary(table, draw) {
+    const results = draw?.results ?? [];
+    const parts = results
+      .map(result => {
+        const text = result?.text ?? result?.name ?? result?.documentName ?? "";
+        return ProjectBoard.#plainText(text);
+      })
+      .filter(Boolean);
+
+    if (parts.length) return parts.join(" | ");
+    return `Rolled on ${table?.name ?? "project events"}`;
+  }
+
   /* ─── Drag & Drop ─── */
 
   /** @override */
@@ -548,10 +567,32 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
     const item = actor?.items.get(itemId);
     if (!actor || !item) return;
     if (!game.user.isGM && !actor.isOwner) return;
-    if (typeof item.system?.drawEventsTable !== "function") return;
+    const eventsUuid = item.system?.events;
+    if (!eventsUuid) return;
 
     try {
-      await item.system.drawEventsTable();
+      const table = await fromUuid(eventsUuid);
+      if (!table) {
+        ui.notifications.error("DRAW_STEEL.Item.project.Events.NoTable", { localize: true });
+        return;
+      }
+
+      const previousPoints = item.system?.points ?? 0;
+      const draw = await table.draw();
+      const gainedPoints = Math.max(0, (item.system?.points ?? 0) - previousPoints);
+
+      const state = getState();
+      const heroEntry = findHero(state, actorId);
+      const projectEntry = heroEntry ? findProject(heroEntry, itemId) : null;
+      if (projectEntry) {
+        addLedgerEntry(projectEntry, {
+          source: "event",
+          points: gainedPoints,
+          notes: ProjectBoard.#eventResultSummary(table, draw)
+        });
+        await setState(state);
+      }
+
       this.render();
     } catch (err) {
       console.warn("ds-project-tracker | drawEventsTable() failed", err);
