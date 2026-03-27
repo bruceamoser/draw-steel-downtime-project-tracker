@@ -14,3 +14,7 @@ Foundry VTT V13 module for Draw Steel downtime project tracking. See ARCHITECTUR
 - Follow Foundry VTT V13 API patterns
 - Use the MCP server's `generate_downtime_project` tool to create test project data
 - Reference `reference/` for Draw Steel project rules
+
+## Issue Workflow
+
+See [bruceamoser/Era-of-Embers CONTRIBUTING.md](https://github.com/bruceamoser/Era-of-Embers/blob/main/CONTRIBUTING.md) for the full issue workflow SOP — branch naming, commit conventions, PR process, and release procedures apply to all workspace repos.
