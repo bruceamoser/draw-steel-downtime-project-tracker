@@ -530,6 +530,9 @@ body[data-theme="dark"] .ds-project-tracker,
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.ds-project-tracker .ledger-table .col-notes[data-tooltip] {
+  cursor: help;
+}
 
 .ds-project-tracker .ledger-total-row td {
   border-top: 2px solid var(--dspt-subcard-border);

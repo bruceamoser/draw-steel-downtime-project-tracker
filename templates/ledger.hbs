@@ -21,7 +21,7 @@
         <td class="col-date">{{entry.dateStr}}</td>
         <td class="col-source">{{entry.sourceLabel}}</td>
         <td class="col-points">+{{entry.points}}</td>
-        <td class="col-notes">{{entry.notes}}</td>
+        <td class="col-notes" {{#if entry.notes}}data-tooltip="{{entry.notes}}"{{/if}}>{{entry.notes}}</td>
         {{#if @root.canEdit}}
         <td class="col-actions">
           <button type="button" class="icon-btn" data-action="deleteEntry" data-entry-id="{{entry.id}}" data-tooltip="Delete Entry">
