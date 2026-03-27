@@ -66,6 +66,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
       const actorProjects = getActorProjects(actor);
       const careerAllocated = totalCareerAllocated(heroEntry);
       const availableCareerPoints = career?.projectPoints ?? 0;
+      const canEdit = game.user.isGM || actor.isOwner;
 
       const projects = [];
       for (const projEntry of heroEntry.projects) {
@@ -82,6 +83,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
         projects.push({
           itemId: projEntry.itemId,
           name: item.name,
+          canEdit,
           type: actorProj?.type ?? "other",
           typeLabel: this.#projectTypeLabel(actorProj?.type),
           points: displayPoints,
@@ -102,7 +104,7 @@ export class ProjectBoard extends HandlebarsApplicationMixin(ApplicationV2) {
         actorId: heroEntry.actorId,
         name: actor.name,
         img: actor.img,
-        canEdit: game.user.isGM || actor.isOwner,
+        canEdit,
         career: career ? {
           name: career.name,
           available: availableCareerPoints,

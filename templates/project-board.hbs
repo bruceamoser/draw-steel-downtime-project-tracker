@@ -84,7 +84,7 @@
         <div class="project-header">
           <span class="project-name">{{proj.name}}</span>
           <span class="project-type badge badge-{{proj.type}}">{{proj.typeLabel}}</span>
-          {{#if activeHero.canEdit}}
+          {{#if proj.canEdit}}
           <button type="button" class="icon-btn remove-project" data-action="removeProject" data-tooltip="Remove Project">
             <i class="fas fa-trash"></i>
           </button>
@@ -118,7 +118,7 @@
         {{!-- Action buttons --}}
         <div class="project-actions">
           {{#unless proj.completed}}
-          {{#if activeHero.canEdit}}
+          {{#if proj.canEdit}}
           {{#if proj.canSpendCareerPoints}}
           <button type="button" class="btn btn-sm btn-career" data-action="spendCareerPoints" data-tooltip="Spend Career Points">
             <i class="fas fa-hammer"></i> Spend PP
