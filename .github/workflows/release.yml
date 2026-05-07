@@ -69,7 +69,7 @@ jobs:
           REPO="${{ github.repository }}"
           MODULE_ID="ds-project-tracker"
           COMPAT_MIN="13"
-          COMPAT_VERIFIED="13"
+          COMPAT_VERIFIED="14"
 
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "https://api.foundryvtt.com/_api/packages/release_version/" \
